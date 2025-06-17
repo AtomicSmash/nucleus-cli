@@ -126,13 +126,24 @@ class PluginMigrateCommand extends Command
             return;
         }
 
-        $process = Process::fromShellCommandline("git rm -r {$pluginPath}");
+        // Check if the plugin is tracked in git
+        $process = Process::fromShellCommandline("git ls-files --error-unmatch {$pluginPath} 2>/dev/null");
         $process->run();
 
         if ($process->isSuccessful()) {
-            $io->text("Removed {$slug} from git repository");
+            // Plugin is tracked, remove it from git
+            $process = Process::fromShellCommandline("git rm -r {$pluginPath}");
+            $process->run();
+
+            if ($process->isSuccessful()) {
+                $io->text("Removed {$slug} from git repository");
+            } else {
+                $io->error("Failed to remove {$slug} from git repository: " . $process->getErrorOutput());
+            }
         } else {
-            $io->error("Failed to remove {$slug} from git repository: " . $process->getErrorOutput());
+            // Plugin is not tracked, just delete the directory
+            $this->deletePluginDirectory($slug, $pluginsPath);
+            $io->text("Plugin {$slug} was not tracked in git, deleted from filesystem");
         }
     }
 
