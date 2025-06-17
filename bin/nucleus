@@ -1,7 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+$autoloadFile = __DIR__ . '/../../../autoload.php';
+
+if (!file_exists($autoloadFile)) {
+    echo "Error: This package must be installed globally using 'composer global require atomicsmash/nucleus'" . PHP_EOL;
+    exit(1);
+}
+
+require $autoloadFile;
 
 use Nucleus\Command\PluginMigrateCommand;
 use Symfony\Component\Console\Application;

@@ -1,7 +1,7 @@
 {
     "name": "atomicsmash/nucleus",
-    "description": "Onboarding package for non-Launchpad WordPress projects",
-    "type": "library",
+    "description": "A WordPress development toolkit for working with projects that use composer and node to manage assets.",
+    "type": "composer-plugin",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -20,5 +20,12 @@
     "minimum-stability": "stable",
     "bin": [
         "bin/nucleus"
-    ]
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
+    }
 } 
