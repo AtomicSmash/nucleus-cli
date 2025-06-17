@@ -1,0 +1,24 @@
+{
+    "name": "atomicsmash/nucleus",
+    "description": "Onboarding package for non-Launchpad WordPress projects",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nucleus\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "symfony/console": "^6.0",
+        "symfony/process": "^6.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.0"
+    },
+    "minimum-stability": "stable",
+    "bin": [
+        "bin/nucleus"
+    ]
+} 

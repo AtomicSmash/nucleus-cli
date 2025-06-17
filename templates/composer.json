@@ -1,0 +1,24 @@
+{
+    "name": "vendor/project",
+    "description": "WordPress project",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "^2.0",
+        "johnpbloch/wordpress": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "extra": {
+        "installer-paths": {
+            "public/wp-content/plugins/{$name}": ["type:wordpress-plugin"],
+            "public/wp-content/themes/{$name}": ["type:wordpress-theme"],
+            "public/wp-content/mu-plugins/{$name}": ["type:wordpress-mu-plugin"]
+        },
+        "wordpress-install-dir": "public/wp"
+    }
+} 
