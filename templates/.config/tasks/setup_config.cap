@@ -1,0 +1,10 @@
+namespace :deploy do
+    desc "Copying wp-config file"
+    task :setup_config do
+        configFile = fetch(:configFile);
+        puts "--> Copying wp-config file"
+        on roles(:app), in: :sequence, wait: 1 do
+            execute :cp, "#{release_path}/.config/wp-configs/#{configFile}.php #{release_path}/active-config.php"
+        end
+    end
+end

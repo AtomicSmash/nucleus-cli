@@ -1,0 +1,37 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "{{PROJECT_VERSION}}",
+  "private": true,
+  "config": {
+    "theme_name": "{{PROJECT_NAME}}",
+    "theme_path": "{{WEB_ROOT}}wp-content/themes/{{THEME_NAME}}"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "build": "mix --production",
+    "dev": "mix watch",
+    "setup": "node ./scripts/setup.js",
+		"setup:database": "node ./scripts/setupDatabase.js",
+		"pull:database": "node ./scripts/pullStagingDatabase.js",
+		"pull:media": "node ./scripts/pullStagingMedia.js",
+    "lint": "echo \"This project doesn't have linting set up yet.\"",
+    "format": "echo \"This project doesn't have formatting set up yet.\"",
+    "test": "echo \"This project doesn't have automated testing set up yet.\"",
+    "test:ui": "echo \"This project doesn't have automated testing set up yet.\"",
+    "release": "echo \"This project doesn't have any release steps set up yet.\"",
+    "deploy": "cap staging deploy",
+    "deploy:prod": "cap production deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "{{PROJECT_REPO_URL}}"
+  },
+  "author": "{{PROJECT_AUTHOR}}",
+  "license": "ISC",
+  "devDependencies": {
+    "@changesets/cli": "^2.27.12",
+    "dotenv-cli": "^8.0.0",
+    "husky": "^9.1.7",
+  },
+  "dependencies": {}
+}

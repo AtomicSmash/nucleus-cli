@@ -1,0 +1,10 @@
+namespace :deploy do
+    desc "Setting up MU plugins"
+    task :mu_plugins do
+        puts "--> Setting up MU plugins"
+        on roles(:app), in: :sequence do
+            execute "mkdir #{release_path}/{{WEB_ROOT}}wp-content/mu-plugins"
+            execute :mv, "#{release_path}/{{WEB_ROOT}}wp-content/plugins/kinsta-mu-plugins/* #{release_path}/wp-content/mu-plugins/"
+        end
+    end
+end

@@ -1,0 +1,9 @@
+namespace :deploy do
+    desc "Clear Kinsta cache"
+    task :clear_kinsta_cache do
+        puts "--> Clear Kinsta cache"
+        on roles(:app), in: :sequence, wait: 1 do
+            execute "wp kinsta cache purge --path='#{release_path}'/wp"
+        end
+    end
+end

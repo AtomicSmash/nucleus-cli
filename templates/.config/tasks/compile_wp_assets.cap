@@ -1,0 +1,13 @@
+namespace :deploy do
+    desc "Compiling CSS and JS"
+    task :compile_wp_assets do
+        run_locally do
+            puts "--> NPM install"
+            execute :npm, 'install'
+            puts "--> NPM run build"
+            execute :npm, 'run', 'build'
+            puts "--> Transfering compiled assets"
+            execute "rsync -av -e 'ssh -p #{fetch(:sshPort)}' {{WEB_ROOT}}wp-content/themes/{{THEME_NAME}}/dist/ #{fetch(:sshUser)}@#{fetch(:sshServer)}:'#{release_path}'/{{WEB_ROOT}}wp-content/themes/{{THEME_NAME}}/dist"
+        end
+    end
+end

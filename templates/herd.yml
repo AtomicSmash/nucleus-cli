@@ -1,0 +1,7 @@
+name: {{THEME_NAME}}
+php: '{{PHP_VERSION}}'
+secured: true
+aliases: {  }
+services: {  }
+integrations:
+    forge: {  }

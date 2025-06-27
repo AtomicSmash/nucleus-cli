@@ -1,12 +1,12 @@
 {
-    "name": "vendor/project",
-    "description": "WordPress project",
+    "name": "{{VENDOR_NAME}}/{{PROJECT_NAME}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
     "type": "project",
-    "license": "proprietary",
+    "license": "{{PROJECT_LICENSE}}",
     "require": {
-        "php": ">=7.4",
+        "php": ">={{PHP_VERSION}}",
         "composer/installers": "^2.0",
-        "johnpbloch/wordpress": "*"
+        "johnpbloch/wordpress": "{{WORDPRESS_VERSION}}"
     },
     "config": {
         "allow-plugins": {
@@ -15,10 +15,10 @@
     },
     "extra": {
         "installer-paths": {
-            "public/wp-content/plugins/{$name}": ["type:wordpress-plugin"],
-            "public/wp-content/themes/{$name}": ["type:wordpress-theme"],
-            "public/wp-content/mu-plugins/{$name}": ["type:wordpress-mu-plugin"]
+            "{{WEB_ROOT}}wp-content/plugins/{$name}": ["type:wordpress-plugin"],
+            "{{WEB_ROOT}}wp-content/themes/{$name}": ["type:wordpress-theme"],
+            "{{WEB_ROOT}}wp-content/mu-plugins/{$name}": ["type:wordpress-mu-plugin"]
         },
-        "wordpress-install-dir": "public/wp"
+        "wordpress-install-dir": "{{WEB_ROOT}}wp"
     }
-} 
+}

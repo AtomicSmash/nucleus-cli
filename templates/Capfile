@@ -1,0 +1,18 @@
+set :deploy_config_path, '.config/deploy.rb'
+set :stage_config_path, '.config/deploy'
+
+# Load DSL and set up stages
+require 'capistrano/setup'
+
+# Include default deployment tasks
+require 'capistrano/deploy'
+
+# Include cap composer
+require 'capistrano/composer'
+
+# Include git
+require 'capistrano/scm/git'
+install_plugin Capistrano::SCM::Git
+
+# Include our custom wp-config switcher script
+Dir.glob('.config/tasks/*.cap').each { |r| import r }

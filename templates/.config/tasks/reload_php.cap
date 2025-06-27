@@ -1,0 +1,9 @@
+namespace :deploy do
+    desc "Restart PHP-FPM"
+    task :reload_php do
+        puts "--> Restarting php-fpm"
+        on roles(:app), in: :sequence, wait: 1 do
+            execute :sudo, :service, "php#{php_version}-fpm", 'reload'
+        end
+    end
+end
