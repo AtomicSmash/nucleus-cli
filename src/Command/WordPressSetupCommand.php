@@ -35,14 +35,20 @@ class WordPressSetupCommand extends Command
             return Command::FAILURE;
         }
 
+        // Prompt for web root first
+        $webRoot = $this->promptWebRoot($io);
+        if (!$webRoot) {
+            return Command::FAILURE;
+        }
+
         // Find WordPress installation
         $wordpressPath = $this->findWordPressInstallation($io);
         if (!$wordpressPath) {
             return Command::FAILURE;
         }
 
-        // Prompt for WordPress target location
-        $targetPath = $this->promptWordPressLocation($io);
+        // Prompt for WordPress target location relative to web root
+        $targetPath = $this->promptWordPressLocation($io, $webRoot);
         if (!$targetPath) {
             return Command::FAILURE;
         }
@@ -53,7 +59,7 @@ class WordPressSetupCommand extends Command
         }
 
         // Move wp-content directory
-        if (!$this->moveWpContentDirectory($targetPath, $io)) {
+        if (!$this->moveWpContentDirectory($targetPath, $webRoot, $io)) {
             return Command::FAILURE;
         }
 
@@ -63,7 +69,7 @@ class WordPressSetupCommand extends Command
         $io->success('WordPress setup completed successfully!');
         $io->text([
             'WordPress has been moved to the correct location.',
-            '`wp-content` directory has been moved to `public/`.',
+            '`wp-content` directory has been moved to `' . $webRoot . 'wp-content`.',
             '',
             'Next steps:',
             '1. Run `nucleus project:core` to copy and configure template files',
@@ -104,16 +110,29 @@ class WordPressSetupCommand extends Command
         return null;
     }
 
-    private function promptWordPressLocation(SymfonyStyle $io): ?string
+    private function promptWebRoot(SymfonyStyle $io): ?string
+    {
+        $defaultRoot = Defaults::WEB_ROOT;
+        $question = new Question("What is the web root for this project? (default: {$defaultRoot}): ", $defaultRoot);
+        $webRoot = $io->askQuestion($question);
+
+        if (is_dir($this->projectRoot . '/' . $webRoot) && !$io->confirm("Directory " . $webRoot . " already exists. Do you want to continue?", false)) {
+            return null;
+        }
+
+        return $webRoot;
+    }
+
+    private function promptWordPressLocation(SymfonyStyle $io, string $webRoot): ?string
     {
         $defaultPath = Defaults::WORDPRESS_INSTALL_PATH;
         $question = new Question("What path inside the web root would you like to install WordPress? (default: {$defaultPath}): ", $defaultPath);
         $targetPath = $io->askQuestion($question);
 
         // Construct the full path inside the web root
-        $fullTargetPath = $this->projectRoot . '/' . Defaults::WEB_ROOT . $targetPath;
+        $fullTargetPath = $this->projectRoot . '/' . $webRoot . $targetPath;
 
-        if (is_dir($fullTargetPath) && !$io->confirm("Directory " . Defaults::WEB_ROOT . "{$targetPath} already exists. Do you want to continue?", false)) {
+        if (is_dir($fullTargetPath) && !$io->confirm("Directory " . $webRoot . "{$targetPath} already exists. Do you want to continue?", false)) {
             return null;
         }
 
@@ -147,10 +166,10 @@ class WordPressSetupCommand extends Command
         return true;
     }
 
-    private function moveWpContentDirectory(string $wordpressPath, SymfonyStyle $io): bool
+    private function moveWpContentDirectory(string $wordpressPath, string $webRoot, SymfonyStyle $io): bool
     {
         $wpContentSource = $wordpressPath . '/wp-content';
-        $wpContentTarget = $this->projectRoot . '/' . Defaults::WP_CONTENT_TARGET;
+        $wpContentTarget = $this->projectRoot . '/' . $webRoot . 'wp-content';
 
         if (!is_dir($wpContentSource)) {
             $io->warning('`wp-content` directory not found in WordPress installation.');
@@ -159,7 +178,7 @@ class WordPressSetupCommand extends Command
 
         if (is_dir($wpContentTarget)) {
             $choice = $io->choice(
-                "`wp-content` directory already exists at `" . Defaults::WP_CONTENT_TARGET . "`. What would you like to do?",
+                "`wp-content` directory already exists at `{$webRoot}wp-content`. What would you like to do?",
                 ['overwrite', 'backup and replace', 'skip'],
                 'backup and replace'
             );
@@ -179,11 +198,11 @@ class WordPressSetupCommand extends Command
             }
         }
 
-        $io->text('Moving `wp-content` directory to `public/`...');
+        $io->text("Moving `wp-content` directory to `{$webRoot}wp-content`...");
         
-        // Create public directory if it doesn't exist
-        if (!is_dir($this->projectRoot . '/public')) {
-            mkdir($this->projectRoot . '/public', 0755, true);
+        // Create web root directory if it doesn't exist
+        if (!is_dir($this->projectRoot . '/' . $webRoot)) {
+            mkdir($this->projectRoot . '/' . $webRoot, 0755, true);
         }
 
         $process = Process::fromShellCommandline("cp -r {$wpContentSource} {$wpContentTarget}");

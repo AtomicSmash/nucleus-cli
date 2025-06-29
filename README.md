@@ -22,10 +22,17 @@ Run a complete project setup that executes all setup commands in sequence:
 nucleus project:setup
 ```
 
-This command will run:
-1. WordPress Setup
-2. Project Core Setup  
-3. Plugin Migration
+This command will:
+1. Ask for confirmation to proceed with the overall setup
+2. For each setup command, show a description and ask if you want to run it:
+   - **WordPress Setup**: Move WordPress to the correct location and organize wp-content directory
+   - **Project Core Setup**: Copy and configure core project files (composer.json, wp-config.php, etc.)
+   - **Plugin Migration**: Migrate WordPress plugins to Composer via wpackagist
+   - **Theme Cleanup**: Remove unused themes, keeping only the active theme and its parent
+3. Allow you to skip any individual section if you don't need it
+4. Provide a summary of completed tasks and next steps
+
+You can also run each command independently if you prefer to set up your project step by step.
 
 ### WordPress Setup
 
@@ -36,12 +43,13 @@ nucleus wordpress:setup
 ```
 
 The command will:
-1. Find your WordPress installation in common locations
-2. Prompt you for the target location (default: `public/wp`)
-3. Move WordPress to the specified location
-4. Move the `wp-content` directory to `public/`
-5. Remove WordPress core files from the target location
-6. Provide next steps guidance
+1. Prompt you for the web root path (default: `public/`)
+2. Find your WordPress installation in common locations
+3. Prompt you for the WordPress installation path relative to the web root (default: `wp`)
+4. Move WordPress to the specified location within the web root
+5. Move the `wp-content` directory to the web root
+6. Remove WordPress core files from the target location
+7. Provide next steps guidance
 
 ### Project Core Setup
 

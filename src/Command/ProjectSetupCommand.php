@@ -26,20 +26,40 @@ class ProjectSetupCommand extends Command
         $io->title('Nucleus Project Setup');
         $io->text('This will run all the necessary setup commands for your WordPress project.');
 
-        if (!$io->confirm('Do you want to proceed with the full project setup?', true)) {
+        if (!$io->confirm('Do you want to proceed with the project setup?', true)) {
             return Command::SUCCESS;
         }
 
         $commands = [
-            'wordpress:setup' => 'WordPress Setup',
-            'template:setup' => 'Template Setup',
-            'plugins:migrate' => 'Plugin Migration'
+            'wordpress:setup' => [
+                'name' => 'WordPress Setup',
+                'description' => 'Move WordPress to the correct location and organize wp-content directory'
+            ],
+            'project:core' => [
+                'name' => 'Project Core Setup',
+                'description' => 'Copy and configure core project files (composer.json, wp-config.php, etc.)'
+            ],
+            'plugins:migrate' => [
+                'name' => 'Plugin Migration',
+                'description' => 'Migrate WordPress plugins to Composer via wpackagist'
+            ],
+            'theme:cleanup' => [
+                'name' => 'Theme Cleanup',
+                'description' => 'Remove unused themes, keeping only the active theme and its parent'
+            ]
         ];
 
         $success = true;
+        $completedCommands = [];
 
-        foreach ($commands as $command => $description) {
-            $io->section($description);
+        foreach ($commands as $command => $info) {
+            $io->section($info['name']);
+            $io->text($info['description']);
+            
+            if (!$io->confirm("Do you want to run {$info['name']}?", true)) {
+                $io->text("Skipping {$info['name']}.");
+                continue;
+            }
             
             if (!$this->runCommand($command, $io)) {
                 $io->error("Failed to run: {$command}");
@@ -49,24 +69,29 @@ class ProjectSetupCommand extends Command
                     break;
                 }
             } else {
-                $io->success("Completed: {$description}");
+                $io->success("Completed: {$info['name']}");
+                $completedCommands[] = $info['name'];
             }
         }
 
         if ($success) {
             $io->success('Project setup completed successfully!');
-            $io->text([
-                'Your WordPress project is now configured with:',
-                '',
-                '✓ WordPress moved to the correct location',
-                '✓ Template files copied and configured',
-                '✓ Plugins migrated to Composer',
-                '',
-                'Next steps:',
-                '1. Run composer install to install dependencies',
-                '2. Configure your database settings',
-                '3. Set up your development environment'
-            ]);
+            
+            if (!empty($completedCommands)) {
+                $io->text([
+                    'Your WordPress project is now configured with:',
+                    '',
+                    ...array_map(fn($cmd) => "✓ {$cmd}", $completedCommands),
+                    '',
+                    'Next steps:',
+                    '1. Run composer install to install dependencies',
+                    '2. Configure your database settings',
+                    '3. Set up your development environment'
+                ]);
+            } else {
+                $io->text('No commands were executed. You can run individual commands as needed:');
+                $io->listing(array_map(fn($cmd, $info) => "nucleus {$cmd} - {$info['description']}", array_keys($commands), array_values($commands)));
+            }
         } else {
             $io->warning('Project setup completed with some errors. Please review the output above.');
         }
