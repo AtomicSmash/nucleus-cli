@@ -86,7 +86,7 @@ class ProjectCoreCommand extends Command
         $this->placeholders['WORDPRESS_TABLE_PREFIX'] = $io->ask('WordPress table prefix', Defaults::WORDPRESS_TABLE_PREFIX);
         
         // Theme selection based on the intended wp-content location
-        $this->placeholders['THEME_NAME'] = $this->selectTheme($io, $this->placeholders['WEB_ROOT']);
+        $this->placeholders['THEME_NAME'] = $this->selectTheme($io);
 
         // Git configuration
         $io->text('Git Configuration:');
@@ -237,37 +237,27 @@ class ProjectCoreCommand extends Command
         return $content;
     }
 
-    private function selectTheme(SymfonyStyle $io, string $webRoot): string
+    private function selectTheme(SymfonyStyle $io): string
     {
-        $wpContentPath = $this->projectRoot . '/' . $webRoot . 'wp-content';
-        $themesPath = $wpContentPath . '/themes';
-        $themes = [];
-        
         $io->section('Theme Selection');
-        $io->text("Theme selection is based on the intended wp-content location: {$webRoot}wp-content/themes/");
         
-        // Check if wp-content exists in the intended location
-        if (is_dir($wpContentPath)) {
-            if (is_dir($themesPath)) {
-                $themes = glob($themesPath . '/*', GLOB_ONLYDIR);
-            }
-        } else {
-            $io->note("The wp-content directory doesn't exist at {$webRoot}wp-content yet. It will be created during WordPress setup.");
+        // Search for themes in current WordPress installation locations
+        $themes = $this->findThemesInWordPressInstallations();
+        
+        if (empty($themes)) {
+            $io->text('No themes found in current WordPress installations.');
+            $io->text('Searched in: ' . implode(', ', Defaults::WORDPRESS_SEARCH_PATHS));
+            return $io->ask('Enter theme name', Defaults::getThemeName());
         }
         
         $themeNames = array_map(function($theme) {
             return basename($theme);
         }, $themes);
         
-        // Add default option and manual entry option
+        // Add manual entry option
         $options = array_merge($themeNames, ['Enter custom theme name']);
         
-        if (empty($themeNames)) {
-            $io->text('No themes found in the intended location.');
-            return $io->ask('Enter theme name', Defaults::getThemeName());
-        }
-        
-        $io->text('Available themes:');
+        $io->text('Available themes found in current WordPress installation:');
         $io->listing($themeNames);
         
         $choice = $io->choice('Select a theme or enter custom name', $options);
@@ -277,5 +267,25 @@ class ProjectCoreCommand extends Command
         }
         
         return $choice;
+    }
+    
+    private function findThemesInWordPressInstallations(): array
+    {
+        $themes = [];
+        
+        foreach (Defaults::WORDPRESS_SEARCH_PATHS as $path) {
+            $fullPath = $this->projectRoot . '/' . $path;
+            $wpContentPath = $fullPath . '/wp-content/themes';
+            
+            // Check if this is a WordPress installation
+            if (file_exists($fullPath . '/wp-config.php') || file_exists($fullPath . '/wp-load.php')) {
+                if (is_dir($wpContentPath)) {
+                    $foundThemes = glob($wpContentPath . '/*', GLOB_ONLYDIR);
+                    $themes = array_merge($themes, $foundThemes);
+                }
+            }
+        }
+        
+        return $themes;
     }
 } 
