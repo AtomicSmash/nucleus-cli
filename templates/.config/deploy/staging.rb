@@ -1,4 +1,4 @@
-server '{{STAGING_SSH}}', user: '{{STAGING_SSH_USER}}', roles: %w{app db web}, port: {{STAGING_SSH_PORT}}
+server '{{STAGING_SSH_HOST}}', user: '{{STAGING_SSH_USER}}', roles: %w{app db web}, port: {{STAGING_SSH_PORT}}
 
 set :deploy_to, "/www/{{KINSTA_FOLDER}}/public"
 
@@ -53,7 +53,7 @@ set :configFile, "staging"
 # These variables need to be declared again, that aren't retrievable from above
 set :sshPort, {{STAGING_SSH_PORT}}
 set :sshUser, "{{STAGING_SSH_USER}}"
-set :sshServer, "{{STAGING_SSH}}"
+set :sshServer, "{{STAGING_SSH_HOST}}"
 
 # Deployment tasks
 namespace :deploy do

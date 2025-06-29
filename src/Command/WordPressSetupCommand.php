@@ -9,6 +9,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Process\Process;
+use Nucleus\Config\Defaults;
 
 class WordPressSetupCommand extends Command
 {
@@ -65,7 +66,7 @@ class WordPressSetupCommand extends Command
             '`wp-content` directory has been moved to `public/`.',
             '',
             'Next steps:',
-            '1. Run `nucleus template:setup` to copy and configure template files',
+            '1. Run `nucleus project:core` to copy and configure template files',
             '2. Run composer install to install dependencies'
         ]);
 
@@ -74,25 +75,23 @@ class WordPressSetupCommand extends Command
 
     private function isProjectDirectory(SymfonyStyle $io): bool
     {
-        if (!file_exists($this->projectRoot . '/composer.json')) {
-            $io->error('No `composer.json` found. Please run this command from your project root.');
+        // Check if we're in a valid directory (not requiring composer.json to exist)
+        if (!is_dir($this->projectRoot)) {
+            $io->error('Invalid project directory.');
             return false;
         }
+        
+        // If composer.json already exists, warn the user
+        if (file_exists($this->projectRoot . '/composer.json')) {
+            $io->note('A composer.json file already exists in this directory. It will be handled during the setup process.');
+        }
+        
         return true;
     }
 
     private function findWordPressInstallation(SymfonyStyle $io): ?string
     {
-        $possiblePaths = [
-            'wordpress',
-            'wp',
-            'public/wordpress',
-            'public/wp',
-            'public',
-            '.'
-        ];
-
-        foreach ($possiblePaths as $path) {
+        foreach (Defaults::WORDPRESS_SEARCH_PATHS as $path) {
             $fullPath = $this->projectRoot . '/' . $path;
             if (file_exists($fullPath . '/wp-config.php') || file_exists($fullPath . '/wp-load.php')) {
                 $io->text("Found WordPress installation at: {$path}");
@@ -101,19 +100,20 @@ class WordPressSetupCommand extends Command
         }
 
         $io->error('WordPress installation not found. Please ensure WordPress is installed in one of these locations:');
-        $io->listing($possiblePaths);
+        $io->listing(Defaults::WORDPRESS_SEARCH_PATHS);
         return null;
     }
 
     private function promptWordPressLocation(SymfonyStyle $io): ?string
     {
-        $defaultPath = 'public/wp';
-        $question = new Question("Where would you like to move WordPress to? (default: {$defaultPath}): ", $defaultPath);
+        $defaultPath = Defaults::WORDPRESS_INSTALL_PATH;
+        $question = new Question("What path inside the web root would you like to install WordPress? (default: {$defaultPath}): ", $defaultPath);
         $targetPath = $io->askQuestion($question);
 
-        $fullTargetPath = $this->projectRoot . '/' . $targetPath;
+        // Construct the full path inside the web root
+        $fullTargetPath = $this->projectRoot . '/' . Defaults::WEB_ROOT . $targetPath;
 
-        if (is_dir($fullTargetPath) && !$io->confirm("Directory {$targetPath} already exists. Do you want to continue?", false)) {
+        if (is_dir($fullTargetPath) && !$io->confirm("Directory " . Defaults::WEB_ROOT . "{$targetPath} already exists. Do you want to continue?", false)) {
             return null;
         }
 
@@ -150,7 +150,7 @@ class WordPressSetupCommand extends Command
     private function moveWpContentDirectory(string $wordpressPath, SymfonyStyle $io): bool
     {
         $wpContentSource = $wordpressPath . '/wp-content';
-        $wpContentTarget = $this->projectRoot . '/public/wp-content';
+        $wpContentTarget = $this->projectRoot . '/' . Defaults::WP_CONTENT_TARGET;
 
         if (!is_dir($wpContentSource)) {
             $io->warning('`wp-content` directory not found in WordPress installation.');
@@ -159,7 +159,7 @@ class WordPressSetupCommand extends Command
 
         if (is_dir($wpContentTarget)) {
             $choice = $io->choice(
-                "`wp-content` directory already exists at `public/wp-content`. What would you like to do?",
+                "`wp-content` directory already exists at `" . Defaults::WP_CONTENT_TARGET . "`. What would you like to do?",
                 ['overwrite', 'backup and replace', 'skip'],
                 'backup and replace'
             );

@@ -21,13 +21,13 @@ if (!staging_url) {
 		staging_url = staging_url.slice(0, -1);
 	}
 
-	const tmpFile = "/tmp/launchpad.sql";
-	const tmpFileProcessed = "/tmp/launchpad.processed.sql";
+	const tmpFile = "/tmp/nucleus.sql";
+	const tmpFileProcessed = "/tmp/nucleus.processed.sql";
 
 	console.log("Pulling database from staging...");
 	try {
 		await execute(
-			`ssh ${staging_ssh_username}@${staging_ssh_host} -p ${staging_ssh_port} "cd public/current && wp db export - --add-drop-table" > ${tmpFile}`,
+			`ssh ${staging_ssh_username}@${staging_ssh_host} -p ${staging_ssh_port} "cd {{WEB_ROOT}}current && wp db export - --add-drop-table" > ${tmpFile}`,
 		);
 
 		console.log("Updating URLs in database SQL (streaming)...");

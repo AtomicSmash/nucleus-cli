@@ -4,11 +4,10 @@
  */
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound,WordPress.Security.ValidatedSanitizedInput,WordPress.PHP.YodaConditions.NotYoda
-define( 'PROJECT_DIR', realpath( __DIR__ . '/.' ) );
 define( 'ROOT_DIR', realpath( __DIR__ . '/.' ) );
 
 /** Load Composer */
-require_once PROJECT_DIR . '/vendor/autoload.php';
+require_once ROOT_DIR . '/vendor/autoload.php';
 
 if ( file_exists( ROOT_DIR . '/active-config.php' ) ) {
 	require ROOT_DIR . '/active-config.php';
@@ -17,7 +16,7 @@ if ( file_exists( ROOT_DIR . '/active-config.php' ) ) {
 }
 
 // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable,WordPress.WP.GlobalVariablesOverride.Prohibited
-$table_prefix  = 'wp_';
+$table_prefix  = '{{WORDPRESS_TABLE_PREFIX}}_';
 
 define( 'FS_METHOD', 'direct' );
 define( 'DISABLE_WP_CRON', true );
@@ -25,7 +24,7 @@ define( 'ALTERNATE_WP_CRON', true );
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/wp' );
+	define( 'ABSPATH', __DIR__ . '/{{WORDPRESS_INSTALL_PATH}}' );
 }
 
 /** Sets up WordPress vars and included files. */

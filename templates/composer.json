@@ -19,6 +19,6 @@
             "{{WEB_ROOT}}wp-content/themes/{$name}": ["type:wordpress-theme"],
             "{{WEB_ROOT}}wp-content/mu-plugins/{$name}": ["type:wordpress-mu-plugin"]
         },
-        "wordpress-install-dir": "{{WEB_ROOT}}wp"
+        "wordpress-install-dir": "{{WEB_ROOT}}{{WORDPRESS_INSTALL_PATH}}"
     }
 }

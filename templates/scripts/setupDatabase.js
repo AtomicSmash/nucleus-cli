@@ -14,7 +14,7 @@ await execute("wp db create")
 	.then(() => {
 		console.log("Installing wordpress database tables...");
 		return execute(
-			`wp core install --url=http://${process.env.CI ? "127.0.0.1" : "launchpad-child.test"}/ --title=Temp --admin_user=Bot --admin_email=fake@fake.com --admin_password=password`,
+			`wp core install --url=http://${process.env.CI ? "127.0.0.1" : "nucleus.test"}/ --title=Temp --admin_user=Bot --admin_email=fake@fake.com --admin_password=password`,
 		);
 	})
 	.then(() => {
@@ -33,7 +33,7 @@ await execute("wp db create")
 	})
 	.then(() => {
 		console.log("Activating theme...");
-		return execute(`wp theme activate launchpad-child`);
+		return execute(`wp theme activate {{THEME_NAME}}`);
 	})
 	.then(() => {
 		console.log(

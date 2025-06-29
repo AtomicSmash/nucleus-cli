@@ -2,10 +2,10 @@ server '{{PRODUCTION_SSH}}', user: '{{PRODUCTION_SSH_USER}}', roles: %w{app db w
 
 set :deploy_to, "/www/{{KINSTA_FOLDER}}/public"
 
-set :branch, "main"
+set :branch, "{{GIT_DEFAULT_BRANCH}}"
 
 # Confirmation prompt before deployment
-puts "\nWARNING: You are about to deploy the `main` branch to the Production environment!\n\n"
+puts "\nWARNING: You are about to deploy the `{{GIT_DEFAULT_BRANCH}}` branch to the Production environment!\n\n"
 print "Are you sure you want to continue? (yes/no): "
 confirmation = $stdin.gets.strip.downcase
 
@@ -14,7 +14,7 @@ unless confirmation == "yes"
   exit 1
 end
 
-puts "\nDeploying `main` branch to Production environment"
+puts "\nDeploying `{{GIT_DEFAULT_BRANCH}}` branch to Production environment"
 set :linked_dirs, fetch(:linked_dirs, []).push('{{WEB_ROOT}}wp-content/uploads').push('{{WEB_ROOT}}wp-content/wflogs')
 
 set :configFile, "production"

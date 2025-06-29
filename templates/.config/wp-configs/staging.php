@@ -1,14 +1,14 @@
 <?php
 /**
- * WP config file for the development site.
+ * WP config file for the staging site.
  */
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 /** Database config */
-define( 'DB_NAME', '{{DB_NAME_DEVELOPMENT}}' );
-define( 'DB_USER', '{{DB_USER_DEVELOPMENT}}' );
-define( 'DB_PASSWORD', '{{DB_PASSWORD_DEVELOPMENT}}' );
-define( 'DB_HOST', '{{DB_HOST_DEVELOPMENT}}' );
+define( 'DB_NAME', '{{DB_NAME_STAGING}}' );
+define( 'DB_USER', '{{DB_USER_STAGING}}' );
+define( 'DB_PASSWORD', '{{DB_PASSWORD_STAGING}}' );
+define( 'DB_HOST', '{{DB_HOST_STAGING}}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_unicode_ci' );
 $table_prefix = '{{WORDPRESS_TABLE_PREFIX}}_';
@@ -30,17 +30,17 @@ define( 'LOGGED_IN_SALT', '{{WP_LOGGED_IN_SALT}}' );
 define( 'NONCE_SALT', '{{WP_NONCE_SALT}}' );
 
 /** Debug */
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', true );
+define( 'WP_DEBUG', false );
+define( 'WP_DEBUG_LOG', false );
+define( 'WP_DEBUG_DISPLAY', false );
 define( 'SCRIPT_DEBUG', true );
 
 /** Set the environment type */
-define( 'WP_ENVIRONMENT_TYPE', 'development' );
+define( 'WP_ENVIRONMENT_TYPE', 'staging' );
 
 /** Force correct url to be used in Herd */
-define( 'WP_HOME', 'https://{{PROJECT_NAME}}.test' );
-define( 'WP_SITEURL', 'https://{{PROJECT_NAME}}.test/wp' );
+define( 'WP_HOME', 'https://{{STAGING_URL}}' );
+define( 'WP_SITEURL', 'https://{{STAGING_URL}}.test/wp' );
 
 /** Mailtrap Credentials */
 define( 'MAILTRAP_USERNAME', '{{MAILTRAP_USERNAME}}' );
