@@ -94,11 +94,19 @@ class Defaults
     }
     
     /**
-     * Get the project name default (basename of current directory)
+     * Get the project name default (formatted basename of current directory)
      */
     public static function getProjectName(): string
     {
-        return basename(getcwd());
+        $folderName = basename(getcwd());
+        
+        // Replace dashes and underscores with spaces
+        $formatted = str_replace(['-', '_'], ' ', $folderName);
+        
+        // Capitalize the first letter of each word
+        $formatted = ucwords($formatted);
+        
+        return $formatted;
     }
     
     /**

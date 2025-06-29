@@ -33,7 +33,7 @@ class ProjectSetupCommand extends Command
         $commands = [
             'wordpress:setup' => [
                 'name' => 'WordPress Setup',
-                'description' => 'Move WordPress to the correct location and organize wp-content directory'
+                'description' => 'Move WordPress to the correct location and organise wp-content directory'
             ],
             'project:core' => [
                 'name' => 'Project Core Setup',

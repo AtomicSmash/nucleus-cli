@@ -25,7 +25,7 @@ nucleus project:setup
 This command will:
 1. Ask for confirmation to proceed with the overall setup
 2. For each setup command, show a description and ask if you want to run it:
-   - **WordPress Setup**: Move WordPress to the correct location and organize wp-content directory
+   - **WordPress Setup**: Move WordPress to the correct location and organise wp-content directory
    - **Project Core Setup**: Copy and configure core project files (composer.json, wp-config.php, etc.)
    - **Plugin Migration**: Migrate WordPress plugins to Composer via wpackagist
    - **Theme Cleanup**: Remove unused themes, keeping only the active theme and its parent
