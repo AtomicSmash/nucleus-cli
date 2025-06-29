@@ -70,7 +70,7 @@ class ProjectCoreCommand extends Command
         $io->text('Basic Project Settings:');
         $this->placeholders['VENDOR_NAME'] = $io->ask('Vendor name', Defaults::VENDOR_NAME);
         $this->placeholders['PROJECT_NAME'] = $io->ask('Project name', Defaults::getProjectName());
-        $this->placeholders['PROJECT_DESCRIPTION'] = $io->ask('Project description', Defaults::PROJECT_DESCRIPTION);
+        $this->placeholders['PROJECT_DESCRIPTION'] = $io->ask('Project description', 'The WordPress site for ' . $this->placeholders['PROJECT_NAME']);
         $this->placeholders['PROJECT_LICENSE'] = $io->ask('Project license', Defaults::PROJECT_LICENSE);
         
         // Generate project slug from project name
