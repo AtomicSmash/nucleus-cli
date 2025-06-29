@@ -80,12 +80,13 @@ class ProjectCoreCommand extends Command
         $this->placeholders['PHP_VERSION'] = $io->ask('PHP version', Defaults::PHP_VERSION);
         $this->placeholders['WORDPRESS_VERSION'] = $io->ask('WordPress version', Defaults::WORDPRESS_VERSION);
         
-        // Theme selection
-        $this->placeholders['THEME_NAME'] = $this->selectTheme($io);
-        
+        // Get web root and WordPress install path first for theme selection
         $this->placeholders['WEB_ROOT'] = $io->ask('Web root path', Defaults::WEB_ROOT);
         $this->placeholders['WORDPRESS_INSTALL_PATH'] = $io->ask('WordPress install path', Defaults::WORDPRESS_INSTALL_PATH);
         $this->placeholders['WORDPRESS_TABLE_PREFIX'] = $io->ask('WordPress table prefix', Defaults::WORDPRESS_TABLE_PREFIX);
+        
+        // Theme selection based on the intended wp-content location
+        $this->placeholders['THEME_NAME'] = $this->selectTheme($io, $this->placeholders['WEB_ROOT']);
 
         // Git configuration
         $io->text('Git Configuration:');
@@ -156,7 +157,7 @@ class ProjectCoreCommand extends Command
 
         $templateFiles = [
             '.config/wp-configs/*' => '.config/wp-configs/',
-            'public/wp-config.php' => 'public/wp-config.php',
+            'public/wp-config.php' => $this->placeholders['WEB_ROOT'] . 'wp-config.php',
             '.editorconfig' => '.editorconfig',
             '.gitignore' => '.gitignore',
             '.valetrc' => '.valetrc',
@@ -236,13 +237,22 @@ class ProjectCoreCommand extends Command
         return $content;
     }
 
-    private function selectTheme(SymfonyStyle $io): string
+    private function selectTheme(SymfonyStyle $io, string $webRoot): string
     {
-        $themesPath = getcwd() . '/wp-content/themes';
+        $wpContentPath = $this->projectRoot . '/' . $webRoot . 'wp-content';
+        $themesPath = $wpContentPath . '/themes';
         $themes = [];
         
-        if (is_dir($themesPath)) {
-            $themes = glob($themesPath . '/*', GLOB_ONLYDIR);
+        $io->section('Theme Selection');
+        $io->text("Theme selection is based on the intended wp-content location: {$webRoot}wp-content/themes/");
+        
+        // Check if wp-content exists in the intended location
+        if (is_dir($wpContentPath)) {
+            if (is_dir($themesPath)) {
+                $themes = glob($themesPath . '/*', GLOB_ONLYDIR);
+            }
+        } else {
+            $io->note("The wp-content directory doesn't exist at {$webRoot}wp-content yet. It will be created during WordPress setup.");
         }
         
         $themeNames = array_map(function($theme) {
@@ -253,12 +263,10 @@ class ProjectCoreCommand extends Command
         $options = array_merge($themeNames, ['Enter custom theme name']);
         
         if (empty($themeNames)) {
-            $io->section('Theme Selection');
-            $io->text('No themes found in wp-content/themes/');
+            $io->text('No themes found in the intended location.');
             return $io->ask('Enter theme name', Defaults::getThemeName());
         }
         
-        $io->section('Theme Selection');
         $io->text('Available themes:');
         $io->listing($themeNames);
         

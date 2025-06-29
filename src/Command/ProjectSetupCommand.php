@@ -31,13 +31,13 @@ class ProjectSetupCommand extends Command
         }
 
         $commands = [
-            'wordpress:setup' => [
-                'name' => 'WordPress Setup',
-                'description' => 'Move WordPress to the correct location and organise wp-content directory'
-            ],
             'project:core' => [
                 'name' => 'Project Core Setup',
                 'description' => 'Copy and configure core project files (composer.json, wp-config.php, etc.)'
+            ],
+            'wordpress:setup' => [
+                'name' => 'WordPress Setup',
+                'description' => 'Move WordPress to the correct location and organise wp-content directory'
             ],
             'plugins:migrate' => [
                 'name' => 'Plugin Migration',
