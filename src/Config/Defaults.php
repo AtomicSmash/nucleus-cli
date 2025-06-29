@@ -47,7 +47,7 @@ class Defaults
     public const DB_HOST_DEVELOPMENT = 'localhost';
     
     // Staging environment
-    public const STAGING_SSH = 'staging.example.com';
+    public const STAGING_SSH_HOST = 'staging.example.com';
     public const STAGING_SSH_USER = 'deploy';
     public const STAGING_SSH_PORT = '22';
     public const STAGING_URL = 'staging.example.com';
@@ -57,7 +57,7 @@ class Defaults
     public const DB_HOST_STAGING = 'localhost';
     
     // Production environment
-    public const PRODUCTION_SSH = 'production.example.com';
+    public const PRODUCTION_SSH_HOST = 'production.example.com';
     public const PRODUCTION_SSH_USER = 'deploy';
     public const PRODUCTION_SSH_PORT = '22';
     public const PRODUCTION_URL = 'example.com';

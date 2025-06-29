@@ -90,23 +90,24 @@ The command will:
 The package includes template files that are copied during the project core setup. These files contain placeholders that are replaced with user input:
 
 ### Basic Project Settings
-- `{{VENDOR_NAME}}` - Your vendor/organization name
-- `{{PROJECT_NAME}}` - Your project name (e.g., "The ABC Company")
+- `{{VENDOR_NAME}}` - Your vendor/organisation name
+- `{{PROJECT_NAME}}` - Your project name (e.g. "The ABC Company")
 - `{{PROJECT_DESCRIPTION}}` - Project description
 - `{{PROJECT_LICENSE}}` - Project license (e.g., proprietary)
-- `{{PROJECT_SLUG}}` - Project slug (auto-generated from project name, e.g., "the-abc-company")
-- `{{THEME_NAME}}` - Theme name (derived from project name)
+- `{{PROJECT_SLUG}}` - Project slug (auto-generated from project name, e.g. "the-abc-company")
+- `{{THEME_NAME}}` - Theme name (selected from available themes in `wp-content/themes` or custom entry)
 
 ### Environment Configuration
-- `{{PHP_VERSION}}` - PHP version (e.g., 8.2)
-- `{{WORDPRESS_VERSION}}` - WordPress version (e.g., 6.7.2)
-- `{{WEB_ROOT}}` - Web root path (e.g., public/)
-- `{{WORDPRESS_INSTALL_PATH}}` - WordPress installation directory (e.g., wp)
-- `{{WORDPRESS_TABLE_PREFIX}}` - WordPress database table prefix (e.g., wp_)
+- `{{PHP_VERSION}}` - PHP version (e.g. `8.2`)
+- `{{WORDPRESS_VERSION}}` - WordPress version (e.g. `6.7.2`)
+- `{{WEB_ROOT}}` - Web root path (e.g. `public/`)
+- `{{WORDPRESS_INSTALL_PATH}}` - WordPress installation directory (e.g. `wp`)
+- `{{WORDPRESS_TABLE_PREFIX}}` - WordPress database table prefix (e.g. `wp_`)
+- `{{KINSTA_FOLDER}}` - Kinsta folder name (e.g. `theabccompany_123`)
 
 ### Git Configuration
 - `{{GIT_REMOTE_SSH}}` - Git remote SSH URL
-- `{{GIT_DEFAULT_BRANCH}}` - Git default branch (e.g., main)
+- `{{GIT_DEFAULT_BRANCH}}` - Git default branch (e.g. `main`)
 
 ### Development Environment
 - `{{DB_NAME_DEVELOPMENT}}` - Development database name
@@ -115,25 +116,24 @@ The package includes template files that are copied during the project core setu
 - `{{DB_HOST_DEVELOPMENT}}` - Development database host
 
 ### Staging Environment
-- `{{STAGING_SSH_HOST}}` - Staging SSH host
-- `{{STAGING_SSH_USER}}` - Staging SSH user
-- `{{STAGING_SSH_PORT}}` - Staging SSH port
-- `{{STAGING_URL}}` - Staging URL
 - `{{DB_NAME_STAGING}}` - Staging database name
 - `{{DB_USER_STAGING}}` - Staging database user
 - `{{DB_PASSWORD_STAGING}}` - Staging database password
 - `{{DB_HOST_STAGING}}` - Staging database host
+- `{{STAGING_SSH_HOST}}` - Staging SSH host
+- `{{STAGING_SSH_USER}}` - Staging SSH user
+- `{{STAGING_SSH_PORT}}` - Staging SSH port
+- `{{STAGING_URL}}` - Staging URL
 
 ### Production Environment
-- `{{PRODUCTION_SSH_HOST}}` - Production SSH host
-- `{{PRODUCTION_SSH_USER}}` - Production SSH user
-- `{{PRODUCTION_SSH_PORT}}` - Production SSH port
-- `{{PRODUCTION_URL}}` - Production URL
 - `{{DB_NAME_PRODUCTION}}` - Production database name
 - `{{DB_USER_PRODUCTION}}` - Production database user
 - `{{DB_PASSWORD_PRODUCTION}}` - Production database password
 - `{{DB_HOST_PRODUCTION}}` - Production database host
-- `{{KINSTA_FOLDER}}` - Kinsta folder name
+- `{{PRODUCTION_SSH_HOST}}` - Production SSH host
+- `{{PRODUCTION_SSH_USER}}` - Production SSH user
+- `{{PRODUCTION_SSH_PORT}}` - Production SSH port
+- `{{PRODUCTION_URL}}` - Production URL
 
 ### WordPress Security Keys
 

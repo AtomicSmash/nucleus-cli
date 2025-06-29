@@ -79,7 +79,10 @@ class ProjectCoreCommand extends Command
         
         $this->placeholders['PHP_VERSION'] = $io->ask('PHP version', Defaults::PHP_VERSION);
         $this->placeholders['WORDPRESS_VERSION'] = $io->ask('WordPress version', Defaults::WORDPRESS_VERSION);
-        $this->placeholders['THEME_NAME'] = $io->ask('Theme name', Defaults::getThemeName());
+        
+        // Theme selection
+        $this->placeholders['THEME_NAME'] = $this->selectTheme($io);
+        
         $this->placeholders['WEB_ROOT'] = $io->ask('Web root path', Defaults::WEB_ROOT);
         $this->placeholders['WORDPRESS_INSTALL_PATH'] = $io->ask('WordPress install path', Defaults::WORDPRESS_INSTALL_PATH);
         $this->placeholders['WORDPRESS_TABLE_PREFIX'] = $io->ask('WordPress table prefix', Defaults::WORDPRESS_TABLE_PREFIX);
@@ -231,5 +234,40 @@ class ProjectCoreCommand extends Command
             $content = str_replace('{{' . $placeholder . '}}', $value, $content);
         }
         return $content;
+    }
+
+    private function selectTheme(SymfonyStyle $io): string
+    {
+        $themesPath = getcwd() . '/wp-content/themes';
+        $themes = [];
+        
+        if (is_dir($themesPath)) {
+            $themes = glob($themesPath . '/*', GLOB_ONLYDIR);
+        }
+        
+        $themeNames = array_map(function($theme) {
+            return basename($theme);
+        }, $themes);
+        
+        // Add default option and manual entry option
+        $options = array_merge($themeNames, ['Enter custom theme name']);
+        
+        if (empty($themeNames)) {
+            $io->section('Theme Selection');
+            $io->text('No themes found in wp-content/themes/');
+            return $io->ask('Enter theme name', Defaults::getThemeName());
+        }
+        
+        $io->section('Theme Selection');
+        $io->text('Available themes:');
+        $io->listing($themeNames);
+        
+        $choice = $io->choice('Select a theme or enter custom name', $options);
+        
+        if ($choice === 'Enter custom theme name') {
+            return $io->ask('Enter custom theme name', Defaults::getThemeName());
+        }
+        
+        return $choice;
     }
 } 
