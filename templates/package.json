@@ -1,9 +1,9 @@
 {
-  "name": "{{PROJECT_NAME}}",
+  "name": "{{PROJECT_SLUG}}",
   "version": "{{PROJECT_VERSION}}",
   "private": true,
   "config": {
-    "theme_name": "{{PROJECT_NAME}}",
+    "theme_name": "{{THEME_NAME}}",
     "theme_path": "{{WEB_ROOT}}wp-content/themes/{{THEME_NAME}}"
   },
   "scripts": {

@@ -85,6 +85,23 @@ The command will:
    - If not, add it to a list of not found plugins
 5. Display any plugins that weren't found in the WordPress directory
 
+### Theme Cleanup
+
+Clean up themes by keeping only the active theme and its parent (if child theme):
+
+```bash
+nucleus theme:cleanup
+```
+
+The command will:
+1. Check for active theme in `package.json` config (if exists)
+2. If not found, prompt you to select the active theme from available themes
+3. Detect if the active theme is a parent or child theme by reading `style.css`
+4. If it's a child theme, identify and preserve the parent theme
+5. Show a summary of themes to be deleted
+6. Confirm deletion with the user
+7. Delete all other themes while preserving the active theme and its parent (if applicable)
+
 ## Template Files
 
 The package includes template files that are copied during the project core setup. These files contain placeholders that are replaced with user input:

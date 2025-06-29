@@ -14,6 +14,7 @@ use Nucleus\Command\PluginMigrateCommand;
 use Nucleus\Command\WordPressSetupCommand;
 use Nucleus\Command\ProjectCoreCommand;
 use Nucleus\Command\ProjectSetupCommand;
+use Nucleus\Command\ThemeCleanupCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application('Nucleus', '1.0.0');
@@ -21,4 +22,5 @@ $application->add(new PluginMigrateCommand());
 $application->add(new WordPressSetupCommand());
 $application->add(new ProjectCoreCommand());
 $application->add(new ProjectSetupCommand());
+$application->add(new ThemeCleanupCommand());
 $application->run(); 
