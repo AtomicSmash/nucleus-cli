@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Command;
+namespace NucleusCli\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -192,7 +192,7 @@ class PluginMigrateCommand extends Command
         $gitignorePath = '.gitignore';
         $ignoreRules = [
             'wp-content/plugins/*',
-            'nucleus/*'
+            '.nucleus/*'
         ];
         
         if (!file_exists($gitignorePath)) {
@@ -376,7 +376,7 @@ class PluginMigrateCommand extends Command
 
     private function createNucleusDirectory(SymfonyStyle $io): void
     {
-        $nucleusPath = 'nucleus';
+        $nucleusPath = '.nucleus';
         $pluginsPath = $nucleusPath . '/plugins';
 
         if (!is_dir($nucleusPath)) {

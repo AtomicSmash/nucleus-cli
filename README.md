@@ -25,6 +25,7 @@ nucleus project:setup
 This command will:
 1. Ask for confirmation to proceed with the overall setup
 2. For each setup command, show a description and ask if you want to run it:
+   - **Project Configuration**: Collect and store project settings (vendor, project name, web root, etc.)
    - **Project Core Setup**: Copy and configure core project files (composer.json, wp-config.php, etc.)
    - **WordPress Setup**: Move WordPress to the correct location and organise wp-content directory
    - **Plugin Migration**: Migrate WordPress plugins to Composer via wpackagist
@@ -34,6 +35,22 @@ This command will:
 
 You can also run each command independently if you prefer to set up your project step by step.
 
+### Project Configuration
+
+Configure project settings that are shared across all commands:
+
+```bash
+nucleus project:config
+```
+
+This command collects and stores the following project information:
+- **Basic Project Settings**: Vendor name, project name, description, license, slug
+- **WordPress Configuration**: Web root path, WordPress install path, PHP version
+- **Theme Selection**: Choose from available themes in current WordPress installation
+- **Git Configuration**: Remote SSH URL, default branch
+
+The configuration is stored in memory and used by subsequent commands, eliminating duplicate prompts.
+
 ### WordPress Setup
 
 Set up your WordPress installation with proper directory structure:
@@ -42,14 +59,15 @@ Set up your WordPress installation with proper directory structure:
 nucleus wordpress:setup
 ```
 
+**Note**: Requires project configuration to be set up first using `nucleus project:config`.
+
 The command will:
-1. Prompt you for the web root path (default: `public/`)
+1. Use stored project configuration (web root, WordPress install path)
 2. Find your WordPress installation in common locations
-3. Prompt you for the WordPress installation path relative to the web root (default: `wp`)
-4. Move WordPress to the specified location within the web root
-5. Move the `wp-content` directory to the web root
-6. Remove WordPress core files from the target location
-7. Provide next steps guidance
+3. Move WordPress to the specified location within the web root
+4. Move the `wp-content` directory to the web root
+5. Remove WordPress core files from the target location
+6. Provide next steps guidance
 
 ### Project Core Setup
 
@@ -59,18 +77,21 @@ Copy and configure core project files from templates:
 nucleus project:core
 ```
 
+**Note**: Requires project configuration to be set up first using `nucleus project:config`.
+
 The command will:
-1. Collect project configuration (vendor name, project name, PHP version, etc.)
-2. Copy template files from the nucleus package:
+1. Use stored project configuration (vendor, project name, web root, etc.)
+2. Collect environment-specific configuration (database settings, security keys, external services)
+3. Copy template files from the nucleus package:
    - `.config/wp-configs/*` → `.config/wp-configs/`
-   - `public/wp-config.php` → `public/wp-config.php`
+   - `public/wp-config.php` → `[web-root]/wp-config.php`
    - `.editorconfig` → `.editorconfig`
    - `.gitignore` → `.gitignore`
    - `.valetrc` → `.valetrc`
    - `composer.json` → `composer.json`
    - `herd.yml` → `herd.yml`
-3. Replace placeholders (e.g., `{{PROJECT_NAME}}`) with user input
-4. Handle file conflicts with options to overwrite, backup and replace, or skip
+4. Replace placeholders with collected configuration
+5. Handle file conflicts with options to overwrite, backup and replace, or skip
 
 ### Plugin Migration
 

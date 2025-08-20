@@ -1,6 +1,6 @@
 {
-    "name": "atomicsmash/nucleus",
-    "description": "A WordPress development toolkit for working with projects that use composer and node to manage assets.",
+    "name": "atomicsmash/nucleus-cli",
+    "description": "Development CLI toolkit for onboarding and managing WordPress projects",
     "type": "composer-plugin",
     "license": "MIT",
     "autoload": {
@@ -31,6 +31,6 @@
         }
     },
     "extra": {
-        "class": "Nucleus\\Plugin"
+        "class": "NucleusCli\\Plugin"
     }
 } 

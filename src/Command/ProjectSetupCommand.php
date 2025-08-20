@@ -31,6 +31,10 @@ class ProjectSetupCommand extends Command
         }
 
         $commands = [
+            'project:config' => [
+                'name' => 'Project Configuration',
+                'description' => 'Collect and store project settings (vendor, project name, web root, etc.)'
+            ],
             'project:core' => [
                 'name' => 'Project Core Setup',
                 'description' => 'Copy and configure core project files (composer.json, wp-config.php, etc.)'

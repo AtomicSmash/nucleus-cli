@@ -35,11 +35,23 @@ class WordPressSetupCommand extends Command
             return Command::FAILURE;
         }
 
-        // Prompt for web root first
-        $webRoot = $this->promptWebRoot($io);
-        if (!$webRoot) {
+        // Check if project configuration exists
+        if (!ProjectConfigCommand::hasProjectData()) {
+            $io->error('Project configuration not found. Please run "nucleus project:config" first.');
             return Command::FAILURE;
         }
+
+        // Get web root and WordPress install path from stored configuration
+        $webRoot = ProjectConfigCommand::getProjectData('WEB_ROOT');
+        $wordpressInstallPath = ProjectConfigCommand::getProjectData('WORDPRESS_INSTALL_PATH');
+
+        if (!$webRoot || !$wordpressInstallPath) {
+            $io->error('Required project configuration missing. Please run "nucleus project:config" first.');
+            return Command::FAILURE;
+        }
+
+        $io->text("Using web root: {$webRoot}");
+        $io->text("Using WordPress install path: {$wordpressInstallPath}");
 
         // Find WordPress installation
         $wordpressPath = $this->findWordPressInstallation($io);
@@ -47,9 +59,10 @@ class WordPressSetupCommand extends Command
             return Command::FAILURE;
         }
 
-        // Prompt for WordPress target location relative to web root
-        $targetPath = $this->promptWordPressLocation($io, $webRoot);
-        if (!$targetPath) {
+        // Construct target path using stored configuration
+        $targetPath = $this->projectRoot . '/' . $webRoot . $wordpressInstallPath;
+
+        if (is_dir($targetPath) && !$io->confirm("Directory {$webRoot}{$wordpressInstallPath} already exists. Do you want to continue?", false)) {
             return Command::FAILURE;
         }
 
@@ -69,7 +82,7 @@ class WordPressSetupCommand extends Command
         $io->success('WordPress setup completed successfully!');
         $io->text([
             'WordPress has been moved to the correct location.',
-            '`wp-content` directory has been moved to `' . $webRoot . 'wp-content`.',
+            "`wp-content` directory has been moved to `{$webRoot}wp-content`.",
             '',
             'Next steps:',
             '1. Run `nucleus project:core` to copy and configure template files',
@@ -108,35 +121,6 @@ class WordPressSetupCommand extends Command
         $io->error('WordPress installation not found. Please ensure WordPress is installed in one of these locations:');
         $io->listing(Defaults::WORDPRESS_SEARCH_PATHS);
         return null;
-    }
-
-    private function promptWebRoot(SymfonyStyle $io): ?string
-    {
-        $defaultRoot = Defaults::WEB_ROOT;
-        $question = new Question("What is the web root for this project? (default: {$defaultRoot}): ", $defaultRoot);
-        $webRoot = $io->askQuestion($question);
-
-        if (is_dir($this->projectRoot . '/' . $webRoot) && !$io->confirm("Directory " . $webRoot . " already exists. Do you want to continue?", false)) {
-            return null;
-        }
-
-        return $webRoot;
-    }
-
-    private function promptWordPressLocation(SymfonyStyle $io, string $webRoot): ?string
-    {
-        $defaultPath = Defaults::WORDPRESS_INSTALL_PATH;
-        $question = new Question("What path inside the web root would you like to install WordPress? (default: {$defaultPath}): ", $defaultPath);
-        $targetPath = $io->askQuestion($question);
-
-        // Construct the full path inside the web root
-        $fullTargetPath = $this->projectRoot . '/' . $webRoot . $targetPath;
-
-        if (is_dir($fullTargetPath) && !$io->confirm("Directory " . $webRoot . "{$targetPath} already exists. Do you want to continue?", false)) {
-            return null;
-        }
-
-        return $fullTargetPath;
     }
 
     private function moveWordPressInstallation(string $sourcePath, string $targetPath, SymfonyStyle $io): bool

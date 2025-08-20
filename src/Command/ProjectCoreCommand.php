@@ -33,8 +33,17 @@ class ProjectCoreCommand extends Command
             return Command::FAILURE;
         }
 
-        // Collect user input for placeholders
-        $this->collectPlaceholderValues($io);
+        // Check if project configuration exists
+        if (!ProjectConfigCommand::hasProjectData()) {
+            $io->error('Project configuration not found. Please run "nucleus project:config" first.');
+            return Command::FAILURE;
+        }
+
+        // Load stored project data
+        $this->placeholders = ProjectConfigCommand::getAllProjectData();
+
+        // Collect environment-specific data
+        $this->collectEnvironmentData($io);
 
         // Copy template files
         if (!$this->copyTemplateFiles($io)) {
@@ -62,37 +71,14 @@ class ProjectCoreCommand extends Command
         return true;
     }
 
-    private function collectPlaceholderValues(SymfonyStyle $io): void
+    private function collectEnvironmentData(SymfonyStyle $io): void
     {
-        $io->section('Project Configuration');
-
-        // Basic project settings
-        $io->text('Basic Project Settings:');
-        $this->placeholders['VENDOR_NAME'] = $io->ask('Vendor name', Defaults::VENDOR_NAME);
-        $this->placeholders['PROJECT_NAME'] = $io->ask('Project name', Defaults::getProjectName());
-        $this->placeholders['PROJECT_DESCRIPTION'] = $io->ask('Project description', 'The WordPress site for ' . $this->placeholders['PROJECT_NAME']);
-        $this->placeholders['PROJECT_LICENSE'] = $io->ask('Project license', Defaults::PROJECT_LICENSE);
+        // Collect environment-specific data
+        $io->section('Environment Configuration');
         
-        // Generate project slug from project name
-        $generatedSlug = Defaults::generateProjectSlug($this->placeholders['PROJECT_NAME']);
-        $this->placeholders['PROJECT_SLUG'] = $io->ask('Project slug', $generatedSlug);
-        
-        $this->placeholders['PHP_VERSION'] = $io->ask('PHP version', Defaults::PHP_VERSION);
-        $this->placeholders['WORDPRESS_VERSION'] = $io->ask('WordPress version', Defaults::WORDPRESS_VERSION);
-        
-        // Get web root and WordPress install path first for theme selection
-        $this->placeholders['WEB_ROOT'] = $io->ask('Web root path', Defaults::WEB_ROOT);
-        $this->placeholders['WORDPRESS_INSTALL_PATH'] = $io->ask('WordPress install path', Defaults::WORDPRESS_INSTALL_PATH);
+        // WordPress configuration
         $this->placeholders['WORDPRESS_TABLE_PREFIX'] = $io->ask('WordPress table prefix', Defaults::WORDPRESS_TABLE_PREFIX);
         
-        // Theme selection based on the intended wp-content location
-        $this->placeholders['THEME_NAME'] = $this->selectTheme($io);
-
-        // Git configuration
-        $io->text('Git Configuration:');
-        $this->placeholders['GIT_REMOTE_SSH'] = $io->ask('Git remote SSH URL', Defaults::GIT_REMOTE_SSH);
-        $this->placeholders['GIT_DEFAULT_BRANCH'] = $io->ask('Git default branch', Defaults::GIT_DEFAULT_BRANCH);
-
         // Development environment
         $io->text('Development Environment:');
         $this->placeholders['DB_NAME_DEVELOPMENT'] = $io->ask('Development database name', Defaults::DB_NAME_DEVELOPMENT);
@@ -235,57 +221,5 @@ class ProjectCoreCommand extends Command
             $content = str_replace('{{' . $placeholder . '}}', $value, $content);
         }
         return $content;
-    }
-
-    private function selectTheme(SymfonyStyle $io): string
-    {
-        $io->section('Theme Selection');
-        
-        // Search for themes in current WordPress installation locations
-        $themes = $this->findThemesInWordPressInstallations();
-        
-        if (empty($themes)) {
-            $io->text('No themes found in current WordPress installations.');
-            $io->text('Searched in: ' . implode(', ', Defaults::WORDPRESS_SEARCH_PATHS));
-            return $io->ask('Enter theme name', Defaults::getThemeName());
-        }
-        
-        $themeNames = array_map(function($theme) {
-            return basename($theme);
-        }, $themes);
-        
-        // Add manual entry option
-        $options = array_merge($themeNames, ['Enter custom theme name']);
-        
-        $io->text('Available themes found in current WordPress installation:');
-        $io->listing($themeNames);
-        
-        $choice = $io->choice('Select a theme or enter custom name', $options);
-        
-        if ($choice === 'Enter custom theme name') {
-            return $io->ask('Enter custom theme name', Defaults::getThemeName());
-        }
-        
-        return $choice;
-    }
-    
-    private function findThemesInWordPressInstallations(): array
-    {
-        $themes = [];
-        
-        foreach (Defaults::WORDPRESS_SEARCH_PATHS as $path) {
-            $fullPath = $this->projectRoot . '/' . $path;
-            $wpContentPath = $fullPath . '/wp-content/themes';
-            
-            // Check if this is a WordPress installation
-            if (file_exists($fullPath . '/wp-config.php') || file_exists($fullPath . '/wp-load.php')) {
-                if (is_dir($wpContentPath)) {
-                    $foundThemes = glob($wpContentPath . '/*', GLOB_ONLYDIR);
-                    $themes = array_merge($themes, $foundThemes);
-                }
-            }
-        }
-        
-        return $themes;
     }
 } 

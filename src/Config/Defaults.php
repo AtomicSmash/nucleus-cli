@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Config;
+namespace NucleusCli\Config;
 
 use WPSalts\Salts;
 
