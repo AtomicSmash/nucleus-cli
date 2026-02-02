@@ -11,7 +11,7 @@ define( 'DB_PASSWORD', '{{DB_PASSWORD_DEVELOPMENT}}' );
 define( 'DB_HOST', '{{DB_HOST_DEVELOPMENT}}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_unicode_ci' );
-$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}_';
+$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}';
 
 /** Core tweaks */
 define( 'DISALLOW_FILE_EDIT', false );
@@ -39,8 +39,8 @@ define( 'SCRIPT_DEBUG', true );
 define( 'WP_ENVIRONMENT_TYPE', 'development' );
 
 /** Force correct url to be used in Herd */
-define( 'WP_HOME', 'https://{{PROJECT_NAME}}.test' );
-define( 'WP_SITEURL', 'https://{{PROJECT_NAME}}.test/wp' );
+define( 'WP_HOME', 'https://{{PROJECT_SLUG}}.test' );
+define( 'WP_SITEURL', 'https://{{PROJECT_SLUG}}.test/wp' );
 
 /** Mailtrap Credentials */
 define( 'MAILTRAP_USERNAME', '{{MAILTRAP_USERNAME}}' );

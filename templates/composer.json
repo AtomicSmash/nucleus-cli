@@ -1,23 +1,56 @@
 {
-    "name": "{{VENDOR_NAME}}/{{PROJECT_NAME}}",
+    "name": "{{VENDOR_NAME}}/{{PROJECT_SLUG}}",
     "description": "{{PROJECT_DESCRIPTION}}",
     "type": "project",
     "license": "{{PROJECT_LICENSE}}",
+    "repositories":[
+        {
+            "type":"composer",
+            "url":"https://wpackagist.org",
+            "only": [
+                "wpackagist-plugin/*",
+                "wpackagist-theme/*"
+            ]
+        },
+        {
+          "type": "composer",
+          "url": "https://release-belt.atomicsmash.co.uk"
+        },
+        {
+          "type": "package",
+          "package": {
+            "name": "kinsta/kinsta-mu-plugins",
+            "type": "wordpress-muplugin",
+            "version": "3.3.2",
+            "dist": {
+              "url": "https://kinsta.com/kinsta-tools/kinsta-mu-plugins.zip",
+              "type": "zip"
+            }
+          }
+        }
+    ],
     "require": {
         "php": ">={{PHP_VERSION}}",
-        "composer/installers": "^2.0",
-        "johnpbloch/wordpress": "{{WORDPRESS_VERSION}}"
+        "composer/installers": "^1.0",
+        "johnpbloch/wordpress": "{{WORDPRESS_VERSION}}",
+        "kinsta/kinsta-mu-plugins": "^3.3",
+        "wpackagist-plugin/stream": "4.1.1"
     },
     "config": {
         "allow-plugins": {
             "composer/installers": true
-        }
+        },
+        "sort-packages": true
     },
     "extra": {
         "installer-paths": {
-            "{{WEB_ROOT}}wp-content/plugins/{$name}": ["type:wordpress-plugin"],
-            "{{WEB_ROOT}}wp-content/themes/{$name}": ["type:wordpress-theme"],
-            "{{WEB_ROOT}}wp-content/mu-plugins/{$name}": ["type:wordpress-mu-plugin"]
+            "{{WEB_ROOT}}wp-content/plugins/{$name}": [
+              "type:wordpress-plugin",
+              "type:wordpress-muplugin"
+            ],
+            "{{WEB_ROOT}}wp-content/themes/{$name}": [
+              "type:wordpress-theme"
+            ],
         },
         "wordpress-install-dir": "{{WEB_ROOT}}{{WORDPRESS_INSTALL_PATH}}"
     }

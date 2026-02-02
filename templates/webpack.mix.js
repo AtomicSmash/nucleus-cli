@@ -8,7 +8,7 @@ const rootPath = "./";
 const themePath = "wp-content/themes/{{THEME_NAME}}";
 const rootThemePath = path.join(rootPath, themePath);
 const publicPath = path.join(rootThemePath, "dist");
-const valetHost = process.env.MIX_VALET_HOST || "https://{{PROJECT_NAME}}.test";
+const valetHost = process.env.MIX_VALET_HOST || "https://{{PROJECT_SLUG}}.test";
 
 mix.setPublicPath(publicPath);
 

@@ -1,6 +1,6 @@
-# {{PROJECT_TITLE}}
+# {{PROJECT_NAME}}
 
-The WordPress site for {{PROJECT_TITLE}}.
+The WordPress site for {{PROJECT_NAME}}.
 
 The requirements and local development setup assumes you are using macOS, however it should be fairly easy to adapt for Linux or Windows.
 
@@ -29,7 +29,7 @@ If you're not using the recommended `~/Sites` directory for projects change the 
 You can run the following commands to setup the basic features of the project, this will setup the Valet link, install packages using composer and npm, and compile assets.
 
 ```bash
-    cd {{PROJECT_NAME}}
+    cd {{PROJECT_SLUG}}
     nvm install
     npm run setup
 ```

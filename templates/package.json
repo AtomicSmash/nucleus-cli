@@ -10,10 +10,11 @@
     "prepare": "husky",
     "build": "mix --production",
     "dev": "mix watch",
-    "setup": "node ./scripts/setup.js",
-		"setup:database": "node ./scripts/setupDatabase.js",
-		"pull:database": "node ./scripts/pullStagingDatabase.js",
-		"pull:media": "node ./scripts/pullStagingMedia.js",
+    "init": "npx npm-run-all --sequential setup setup:database pull:*",
+    "setup": "npx @atomicsmash/cli setup",
+    "setup:database": "smash-cli setup-database",
+    "pull:database": "smash-cli pull-database",
+    "pull:media": "smash-cli pull-media",
     "lint": "echo \"This project doesn't have linting set up yet.\"",
     "format": "echo \"This project doesn't have formatting set up yet.\"",
     "test": "echo \"This project doesn't have automated testing set up yet.\"",
@@ -24,14 +25,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "{{PROJECT_REPO_URL}}"
+    "url": "{{GIT_REMOTE_HTTPS}}"
   },
-  "author": "{{PROJECT_AUTHOR}}",
-  "license": "ISC",
+  "author": "{{PROJECT_AUTHOR}} <{{PROJECT_AUTHOR_EMAIL}}> https://www.atomicsmash.co.uk",
+  "license": "UNLICENSED",
   "devDependencies": {
+    "@atomicsmash/cli": "^9.0.1-beta.2",
     "@changesets/cli": "^2.27.12",
+    "cross-env": "^10.1.0",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
-  },
-  "dependencies": {}
+    "npm-run-all": "^4.1.5"
+  }
 }

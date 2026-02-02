@@ -11,11 +11,11 @@ define( 'DB_PASSWORD', '{{DB_PASSWORD_STAGING}}' );
 define( 'DB_HOST', '{{DB_HOST_STAGING}}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_unicode_ci' );
-$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}_';
+$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}';
 
 /** Core tweaks */
-define( 'DISALLOW_FILE_EDIT', false );
-define( 'DISALLOW_FILE_MODS', false );
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
 define( 'WP_AUTO_UPDATE_CORE', false );
 define( 'AUTOMATIC_UPDATER_DISABLED', true );
 
@@ -33,7 +33,7 @@ define( 'NONCE_SALT', '{{WP_NONCE_SALT}}' );
 define( 'WP_DEBUG', false );
 define( 'WP_DEBUG_LOG', false );
 define( 'WP_DEBUG_DISPLAY', false );
-define( 'SCRIPT_DEBUG', true );
+define( 'SCRIPT_DEBUG', false );
 
 /** Set the environment type */
 define( 'WP_ENVIRONMENT_TYPE', 'staging' );
@@ -47,4 +47,4 @@ define( 'MAILTRAP_USERNAME', '{{MAILTRAP_USERNAME}}' );
 define( 'MAILTRAP_PASSWORD', '{{MAILTRAP_PASSWORD}}' );
 
 /** Disable post revisions */
-define( 'WP_POST_REVISIONS', false );
+define( 'WP_POST_REVISIONS', 3 );
