@@ -4,7 +4,7 @@
  */
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound,WordPress.Security.ValidatedSanitizedInput,WordPress.PHP.YodaConditions.NotYoda
-define( 'ROOT_DIR', realpath( __DIR__ . '/.' ) );
+define( 'ROOT_DIR', dirname( __DIR__ ) );
 
 /** Load Composer */
 require_once ROOT_DIR . '/vendor/autoload.php';
@@ -16,7 +16,7 @@ if ( file_exists( ROOT_DIR . '/active-config.php' ) ) {
 }
 
 // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable,WordPress.WP.GlobalVariablesOverride.Prohibited
-$table_prefix  = '{{WORDPRESS_TABLE_PREFIX}}_';
+$table_prefix  = '{{WORDPRESS_TABLE_PREFIX}}';
 
 define( 'FS_METHOD', 'direct' );
 define( 'DISABLE_WP_CRON', true );

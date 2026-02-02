@@ -1,0 +1,22 @@
+intro: "Hello again {{client_name}}"
+
+heading: "We've completed your monthly website maintenance for {{maintenance_month}}"
+
+body_text: |
+  Just a follow-up message to let you know that I've completed this month's maintenance on your {{website_type}} website.
+
+  Here is a summary of the maintenance I've completed:
+
+  {{plugin_updates_list}}
+
+  {{additional_information_complete}}
+
+  Many thanks,
+
+  {{developer_name}}
+
+button_link: "https://support.atomicsmash.co.uk"
+
+button_text: "Report an issue"
+
+body_statement: "Updates are tested thoroughly, but if you do experience any issues let me know by clicking the button below."

@@ -11,11 +11,11 @@ define( 'DB_PASSWORD', '{{DB_PASSWORD_PRODUCTION}}' );
 define( 'DB_HOST', '{{DB_HOST_PRODUCTION}}' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_unicode_ci' );
-$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}_';
+$table_prefix = '{{WORDPRESS_TABLE_PREFIX}}';
 
 /** Core tweaks */
-define( 'DISALLOW_FILE_EDIT', false );
-define( 'DISALLOW_FILE_MODS', false );
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
 define( 'WP_AUTO_UPDATE_CORE', false );
 define( 'AUTOMATIC_UPDATER_DISABLED', true );
 
@@ -42,9 +42,5 @@ define( 'WP_ENVIRONMENT_TYPE', 'production' );
 define( 'WP_HOME', 'https://{{PRODUCTION_URL}}' );
 define( 'WP_SITEURL', 'https://{{PRODUCTION_URL}}.test/wp' );
 
-/** Mailtrap Credentials */
-define( 'MAILTRAP_USERNAME', '{{MAILTRAP_USERNAME}}' );
-define( 'MAILTRAP_PASSWORD', '{{MAILTRAP_PASSWORD}}' );
-
 /** Disable post revisions */
-define( 'WP_POST_REVISIONS', false );
+define( 'WP_POST_REVISIONS', 3 );

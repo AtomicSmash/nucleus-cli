@@ -7,9 +7,9 @@ use WPSalts\Salts;
 class Defaults
 {
     // WordPress configuration
-    public const WORDPRESS_VERSION = '6.7.2';
+    public const WORDPRESS_VERSION = '6.8.3';
     public const WORDPRESS_INSTALL_PATH = 'wp';
-    public const WORDPRESS_TABLE_PREFIX = 'wp';
+    public const WORDPRESS_TABLE_PREFIX = 'wp_';
     
     // WordPress security keys (should be generated)
     public const AUTH_KEY = 'your-unique-phrase';
@@ -30,7 +30,7 @@ class Defaults
     public const THEME_NAME = null; // Will be set to basename of project root
     
     // Environment configuration
-    public const PHP_VERSION = '8.2';
+    public const PHP_VERSION = '8.3';
     public const WEB_ROOT = 'public/';
     
     // File paths
@@ -38,6 +38,7 @@ class Defaults
     
     // Git configuration
     public const GIT_REMOTE_SSH = 'git@github.com:mycompany/project.git';
+		public const GIT_REMOTE_HTTPS = 'https://github.com/mycompany/project.git';
     public const GIT_DEFAULT_BRANCH = 'main';
     
     // Development environment
@@ -47,7 +48,7 @@ class Defaults
     public const DB_HOST_DEVELOPMENT = 'localhost';
     
     // Staging environment
-    public const STAGING_SSH_HOST = 'staging.example.com';
+    public const STAGING_SSH_HOST = '1.2.3.4';
     public const STAGING_SSH_USER = 'deploy';
     public const STAGING_SSH_PORT = '22';
     public const STAGING_URL = 'staging.example.com';
@@ -57,7 +58,7 @@ class Defaults
     public const DB_HOST_STAGING = 'localhost';
     
     // Production environment
-    public const PRODUCTION_SSH_HOST = 'production.example.com';
+    public const PRODUCTION_SSH_HOST = '1.2.3.4';
     public const PRODUCTION_SSH_USER = 'deploy';
     public const PRODUCTION_SSH_PORT = '22';
     public const PRODUCTION_URL = 'example.com';
@@ -72,8 +73,8 @@ class Defaults
     public const MAILTRAP_PASSWORD = 'your-mailtrap-password';
     public const RELEASE_BELT_USERNAME = 'your-release-belt-username';
     public const RELEASE_BELT_PASSWORD = 'your-release-belt-password';
-    public const ACF_USERNAME = 'your-acf-username';
-    public const ACF_PASSWORD = 'your-acf-password';
+    public const ACF_USERNAME = 'acf-composer-username';
+    public const ACF_PASSWORD = 'acf-composer-password';
     
     // Possible WordPress installation paths to search
     public const WORDPRESS_SEARCH_PATHS = [

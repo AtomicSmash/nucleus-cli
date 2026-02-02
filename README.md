@@ -1,13 +1,13 @@
-# Nucleus
+# Nucleus CLI
 
-A WordPress development toolkit for working with projects that use composer and node to manage assets.
+A WordPress development toolkit for working with projects that use composer and node to manage assets with a DevOps focus.
 
 ## Installation
 
 You can install the package globally via composer:
 
 ```bash
-composer global require atomicsmash/nucleus
+composer global require atomicsmash/nucleus-cli
 ```
 
 ## Usage
@@ -114,6 +114,35 @@ The command will:
    - If not, add it to a list of not found plugins
 5. Display any plugins that weren't found in the WordPress directory
 
+### Plugins Update
+
+Run the monthly plugin update workflow with optional maintenance emails and deploy steps:
+
+```bash
+nucleus plugins:update
+```
+
+**Requirements:** Project must have `composer.json` with `johnpbloch/wordpress` and at least one of `https://wpackagist.org` or `https://release-belt.atomicsmash.co.uk` in repositories. A `.nucleus/config.yml` file is required.
+
+The command will:
+1. Ask if you want to send the monthly maintenance email to your client
+2. Check project and (if sending email) global config; prompt for MailerSend API key and sender details if missing
+3. Optionally create a maintenance branch from `main` (e.g. `feature/🛠️-Maintenance-YYYY-MM-DD`)
+4. Optionally send the "starting maintenance" email (Template 1) via MailerSend
+5. Check wpackagist and release-belt plugins for updates; show changelog; apply updates (including release-belt flow: plugins.atomicsmash.co.uk + SSH update script)
+6. Optionally commit changes to the maintenance branch with a generated commit message
+7. Optionally deploy to staging (create release branch, merge maintenance, run `npm run deploy`)
+8. Prompt you to check staging and create a PR (e.g. via Sourcetree or GitLab)
+9. Pull `main`, then optionally deploy to production (`npm run deploy:prod`)
+10. Optionally send the "maintenance complete" email (Template 2) via MailerSend
+11. Finish and clear workflow state
+
+Progress is stored in `.nucleus/plugin-workflow.yml` so you can resume if interrupted. Use `--no-resume` to start fresh.
+
+**Config:**
+- **Project** `.nucleus/config.yml`: `plugins_update.exclude` (plugin slugs to skip), `maintenance_email.client_name`, `maintenance_email.client_email`, `maintenance_email.cc`
+- **Global** `~/.config/nucleus/config.yml` (or `~/.nucleus/config.yml`): `mailersend.api_key`, `mailersend.template_id`, `sender_email`, `developer_name`
+
 ### Theme Cleanup
 
 Clean up themes by keeping only the active theme and its parent (if child theme):
@@ -140,7 +169,7 @@ The package includes template files that are copied during the project core setu
 - `{{PROJECT_NAME}}` - Your project name (e.g. "The ABC Company")
 - `{{PROJECT_DESCRIPTION}}` - Project description
 - `{{PROJECT_LICENSE}}` - Project license (e.g., proprietary)
-- `{{PROJECT_SLUG}}` - Project slug (auto-generated from project name, e.g. "the-abc-company")
+- `{{PROJECT_SLUG}}` - Project slug (auto-generated from project name if not specified, e.g. "the-abc-company")
 - `{{THEME_NAME}}` - Theme name (selected from available themes in `wp-content/themes` or custom entry)
 
 ### Environment Configuration

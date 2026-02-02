@@ -81,7 +81,7 @@ class ProjectCoreCommand extends Command
         
         // Development environment
         $io->text('Development Environment:');
-        $this->placeholders['DB_NAME_DEVELOPMENT'] = $io->ask('Development database name', Defaults::DB_NAME_DEVELOPMENT);
+				$this->placeholders['DB_NAME_DEVELOPMENT'] = $io->ask('Development database name', $this->placeholders['PROJECT_SLUG'] ?? Defaults::DB_NAME_DEVELOPMENT);
         $this->placeholders['DB_USER_DEVELOPMENT'] = $io->ask('Development database user', Defaults::DB_USER_DEVELOPMENT);
         $this->placeholders['DB_PASSWORD_DEVELOPMENT'] = $io->ask('Development database password', Defaults::DB_PASSWORD_DEVELOPMENT);
         $this->placeholders['DB_HOST_DEVELOPMENT'] = $io->ask('Development database host', Defaults::DB_HOST_DEVELOPMENT);

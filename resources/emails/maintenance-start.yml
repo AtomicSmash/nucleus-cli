@@ -1,0 +1,18 @@
+intro: "Hello {{client_name}}"
+
+heading: "We're starting your monthly website maintenance for {{maintenance_month}}"
+
+body_text: |
+  Just a friendly message to let you know that today I am doing essential maintenance on your {{website_type}} website.
+
+  Maintenance usually covers ensuring your site is safe and secure through updating the website core, and all plug-ins. We also look at any other improvements in terms of condensing the codebase or any efficiencies we can find.
+
+  I will send you a quick summary at the end of the day to let you know exactly what's been covered off, if there is anything maintenance specific you'd like me to look at today let me know (e.g. installing a new plugin), just drop me a reply to this email.
+
+  {{additional_information_start}}
+
+button_link: "mailto:{{developer_email}}?cc={{dcs_email}}&subject=Re%3A%20We're%20starting%20your%20monthly%20website%20maintenance%20for%20%7B%7Bmaintenance_month%7D%7D&body=Hi%20%7B%7Bdeveloper_name%7D%7D%2C%0D%0A%0D%0AI've%20got%20a%20request%20for%20you%20in%20this%20month's%20maintenance%3A%0D%0A%0D%0A%5BAdd%20your%20request%20details%20here%5D%0D%0A%0D%0AMany%20thanks%2C%0D%0A%0D%0A%7B%7Bclient_name%7D%7D"
+
+button_text: "Send a request"
+
+body_statement: "Many thanks,\n\n{{developer_name}}"

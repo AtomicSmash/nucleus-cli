@@ -11,6 +11,7 @@ if (!file_exists($autoloadFile)) {
 require $autoloadFile;
 
 use Nucleus\Command\PluginMigrateCommand;
+use Nucleus\Command\PluginsUpdateCommand;
 use Nucleus\Command\WordPressSetupCommand;
 use Nucleus\Command\ProjectCoreCommand;
 use Nucleus\Command\ProjectSetupCommand;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Application;
 
 $application = new Application('Nucleus', '1.0.0');
 $application->add(new PluginMigrateCommand());
+$application->add(new PluginsUpdateCommand());
 $application->add(new WordPressSetupCommand());
 $application->add(new ProjectCoreCommand());
 $application->add(new ProjectSetupCommand());
