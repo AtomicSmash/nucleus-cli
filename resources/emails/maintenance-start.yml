@@ -13,6 +13,6 @@ body_text: |
 
 button_link: "mailto:{{developer_email}}?cc={{dcs_email}}&subject=Re%3A%20We're%20starting%20your%20monthly%20website%20maintenance%20for%20%7B%7Bmaintenance_month%7D%7D&body=Hi%20%7B%7Bdeveloper_name%7D%7D%2C%0D%0A%0D%0AI've%20got%20a%20request%20for%20you%20in%20this%20month's%20maintenance%3A%0D%0A%0D%0A%5BAdd%20your%20request%20details%20here%5D%0D%0A%0D%0AMany%20thanks%2C%0D%0A%0D%0A%7B%7Bclient_name%7D%7D"
 
-button_text: "Send a request"
+button_text: "Send me a request"
 
 body_statement: "Many thanks,\n\n{{developer_name}}"
