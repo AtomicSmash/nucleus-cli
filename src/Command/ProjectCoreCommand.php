@@ -152,7 +152,7 @@ class ProjectCoreCommand extends Command
         ];
 
         foreach ($templateFiles as $templatePath => $targetPath) {
-            $fullTemplatePath = __DIR__ . '/../../templates/' . $templatePath;
+            $fullTemplatePath = __DIR__ . '/../../resources/project-templates/' . $templatePath;
             $fullTargetPath = $this->projectRoot . '/' . $targetPath;
 
             if (strpos($templatePath, '*') !== false) {
