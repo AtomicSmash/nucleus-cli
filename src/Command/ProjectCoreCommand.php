@@ -86,11 +86,15 @@ class ProjectCoreCommand extends Command
         $this->placeholders['DB_PASSWORD_DEVELOPMENT'] = $io->ask('Development database password', Defaults::DB_PASSWORD_DEVELOPMENT);
         $this->placeholders['DB_HOST_DEVELOPMENT'] = $io->ask('Development database host', Defaults::DB_HOST_DEVELOPMENT);
 
+        $this->placeholders['KINSTA_FOLDER'] = $io->ask('Kinsta folder name', Defaults::KINSTA_FOLDER);
+        $defaultWebRoot = '/www/' . $this->placeholders['KINSTA_FOLDER'] . '/public/current/public';
+
         // Staging environment
         $io->text('Staging Environment:');
         $this->placeholders['STAGING_SSH_HOST'] = $io->ask('Staging SSH host', Defaults::STAGING_SSH_HOST);
         $this->placeholders['STAGING_SSH_USER'] = $io->ask('Staging SSH user', Defaults::STAGING_SSH_USER);
         $this->placeholders['STAGING_SSH_PORT'] = $io->ask('Staging SSH port', Defaults::STAGING_SSH_PORT);
+        $this->placeholders['STAGING_WEB_ROOT'] = $io->ask('Staging web root', $defaultWebRoot);
         $this->placeholders['STAGING_URL'] = $io->ask('Staging URL', Defaults::STAGING_URL);
         $this->placeholders['DB_NAME_STAGING'] = $io->ask('Staging database name', Defaults::DB_NAME_STAGING);
         $this->placeholders['DB_USER_STAGING'] = $io->ask('Staging database user', Defaults::DB_USER_STAGING);
@@ -102,12 +106,12 @@ class ProjectCoreCommand extends Command
         $this->placeholders['PRODUCTION_SSH_HOST'] = $io->ask('Production SSH host', Defaults::PRODUCTION_SSH_HOST);
         $this->placeholders['PRODUCTION_SSH_USER'] = $io->ask('Production SSH user', Defaults::PRODUCTION_SSH_USER);
         $this->placeholders['PRODUCTION_SSH_PORT'] = $io->ask('Production SSH port', Defaults::PRODUCTION_SSH_PORT);
+        $this->placeholders['PRODUCTION_WEB_ROOT'] = $io->ask('Production web root', $defaultWebRoot);
         $this->placeholders['PRODUCTION_URL'] = $io->ask('Production URL', Defaults::PRODUCTION_URL);
         $this->placeholders['DB_NAME_PRODUCTION'] = $io->ask('Production database name', Defaults::DB_NAME_PRODUCTION);
         $this->placeholders['DB_USER_PRODUCTION'] = $io->ask('Production database user', Defaults::DB_USER_PRODUCTION);
         $this->placeholders['DB_PASSWORD_PRODUCTION'] = $io->ask('Production database password', Defaults::DB_PASSWORD_PRODUCTION);
         $this->placeholders['DB_HOST_PRODUCTION'] = $io->ask('Production database host', Defaults::DB_HOST_PRODUCTION);
-        $this->placeholders['KINSTA_FOLDER'] = $io->ask('Kinsta folder name', Defaults::KINSTA_FOLDER);
 
         // WordPress security keys
         $io->text('WordPress Security Keys:');
@@ -148,11 +152,12 @@ class ProjectCoreCommand extends Command
             '.gitignore' => '.gitignore',
             '.valetrc' => '.valetrc',
             'composer.json' => 'composer.json',
-            'herd.yml' => 'herd.yml'
+            'herd.yml' => 'herd.yml',
+            'wp-cli.yml' => 'wp-cli.yml',
         ];
 
         foreach ($templateFiles as $templatePath => $targetPath) {
-            $fullTemplatePath = __DIR__ . '/../../resources/project-templates/' . $templatePath;
+            $fullTemplatePath = __DIR__ . '/../../resources/project-template/' . $templatePath;
             $fullTargetPath = $this->projectRoot . '/' . $targetPath;
 
             if (strpos($templatePath, '*') !== false) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace NucleusCli\Config;
+namespace Nucleus\Config;
 
 use WPSalts\Salts;
 
@@ -51,6 +51,7 @@ class Defaults
     public const STAGING_SSH_HOST = '1.2.3.4';
     public const STAGING_SSH_USER = 'deploy';
     public const STAGING_SSH_PORT = '22';
+    public const STAGING_WEB_ROOT = '/www/example-com/public/current/public';
     public const STAGING_URL = 'staging.example.com';
     public const DB_NAME_STAGING = 'wordpress_staging';
     public const DB_USER_STAGING = 'staging_user';
@@ -61,6 +62,7 @@ class Defaults
     public const PRODUCTION_SSH_HOST = '1.2.3.4';
     public const PRODUCTION_SSH_USER = 'deploy';
     public const PRODUCTION_SSH_PORT = '22';
+    public const PRODUCTION_WEB_ROOT = '/www/example-com/public/current/public';
     public const PRODUCTION_URL = 'example.com';
     public const DB_NAME_PRODUCTION = 'wordpress_production';
     public const DB_USER_PRODUCTION = 'production_user';

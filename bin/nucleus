@@ -17,6 +17,9 @@ use Nucleus\Command\ProjectCoreCommand;
 use Nucleus\Command\ProjectSetupCommand;
 use Nucleus\Command\ProjectConfigCommand;
 use Nucleus\Command\ThemeCleanupCommand;
+use Nucleus\Command\WordPressUser\WordPressUserAddCommand;
+use Nucleus\Command\WordPressUser\WordPressUserDeleteCommand;
+use Nucleus\Command\WordPressUser\WordPressUserListCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application('Nucleus', '1.0.0');
@@ -27,4 +30,7 @@ $application->add(new ProjectCoreCommand());
 $application->add(new ProjectSetupCommand());
 $application->add(new ProjectConfigCommand());
 $application->add(new ThemeCleanupCommand());
+$application->add(new WordPressUserAddCommand());
+$application->add(new WordPressUserListCommand());
+$application->add(new WordPressUserDeleteCommand());
 $application->run(); 

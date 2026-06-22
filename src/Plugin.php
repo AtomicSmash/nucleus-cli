@@ -1,6 +1,6 @@
 <?php
 
-namespace NucleusCli;
+namespace Nucleus;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;

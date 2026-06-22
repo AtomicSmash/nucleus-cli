@@ -1,6 +1,6 @@
 <?php
 
-namespace NucleusCli\Command;
+namespace Nucleus\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -228,7 +228,7 @@ class PluginMigrateCommand extends Command
             return false;
         }
 
-        $templatePath = __DIR__ . '/../../resources/project-templates/composer.json';
+        $templatePath = __DIR__ . '/../../resources/project-template/composer.json';
         if (!file_exists($templatePath)) {
             $io->error('Template composer.json not found');
             return false;

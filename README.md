@@ -69,6 +69,44 @@ The command will:
 5. Remove WordPress core files from the target location
 6. Provide next steps guidance
 
+### WordPress User Management
+
+Manage WordPress users across development, staging, and production environments:
+
+```bash
+nucleus wordpress:user add
+nucleus wordpress:user list
+nucleus wordpress:user delete
+```
+
+**Requirements:**
+- A `wp-cli.yml` file in the project root (marks the project as a WordPress installation)
+- WP-CLI installed locally for development commands
+- A `.env` file with SSH credentials for staging and production
+
+**Environment selection:** Each command prompts you to choose an environment (defaults to **development**). For staging and production, WP-CLI commands are run remotely over SSH using credentials from your `.env` file.
+
+**Required `.env` variables for remote environments:**
+
+| Variable | Description |
+|----------|-------------|
+| `STAGING_SSH_HOST` | Staging server hostname |
+| `STAGING_SSH_USER` | Staging SSH username |
+| `STAGING_SSH_PORT` | Staging SSH port |
+| `STAGING_WEB_ROOT` | Absolute path to WordPress on staging |
+| `PRODUCTION_SSH_HOST` | Production server hostname |
+| `PRODUCTION_SSH_USER` | Production SSH username |
+| `PRODUCTION_SSH_PORT` | Production SSH port |
+| `PRODUCTION_WEB_ROOT` | Absolute path to WordPress on production |
+
+**Optional `.env` defaults for `wordpress:user add`:**
+
+| Variable | Description |
+|----------|-------------|
+| `WORDPRESS_USER` | Default username |
+| `WORDPRESS_USER_EMAIL` | Default email address |
+| `WORDPRESS_PASSWORD` | Default password |
+
 ### Project Core Setup
 
 Copy and configure core project files from templates:
@@ -198,6 +236,7 @@ The package includes template files that are copied during the project core setu
 - `{{STAGING_SSH_HOST}}` - Staging SSH host
 - `{{STAGING_SSH_USER}}` - Staging SSH user
 - `{{STAGING_SSH_PORT}}` - Staging SSH port
+- `{{STAGING_WEB_ROOT}}` - Staging web root path
 - `{{STAGING_URL}}` - Staging URL
 
 ### Production Environment
@@ -208,6 +247,7 @@ The package includes template files that are copied during the project core setu
 - `{{PRODUCTION_SSH_HOST}}` - Production SSH host
 - `{{PRODUCTION_SSH_USER}}` - Production SSH user
 - `{{PRODUCTION_SSH_PORT}}` - Production SSH port
+- `{{PRODUCTION_WEB_ROOT}}` - Production web root path
 - `{{PRODUCTION_URL}}` - Production URL
 
 ### WordPress Security Keys
