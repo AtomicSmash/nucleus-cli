@@ -7,7 +7,7 @@ use WPSalts\Salts;
 class Defaults
 {
     // WordPress configuration
-    public const WORDPRESS_VERSION = '6.8.3';
+    public const WORDPRESS_VERSION = '7.0.0';
     public const WORDPRESS_INSTALL_PATH = 'wp';
     public const WORDPRESS_TABLE_PREFIX = 'wp_';
     
@@ -30,7 +30,7 @@ class Defaults
     public const THEME_NAME = null; // Will be set to basename of project root
     
     // Environment configuration
-    public const PHP_VERSION = '8.3';
+    public const PHP_VERSION = '8.4';
     public const WEB_ROOT = 'public/';
     
     // File paths
