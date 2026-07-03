@@ -11,7 +11,7 @@ class WordPressUserListCommand extends Command
 {
     use WordPressUserTrait;
 
-    protected static $defaultName = 'wp:user-list';
+    protected static $defaultName = 'user:list';
 
     protected function configure(): void
     {

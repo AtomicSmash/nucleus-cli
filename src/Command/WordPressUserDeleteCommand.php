@@ -11,7 +11,7 @@ class WordPressUserDeleteCommand extends Command
 {
     use WordPressUserTrait;
 
-    protected static $defaultName = 'wp:user-delete';
+    protected static $defaultName = 'user:delete';
 
     protected function configure(): void
     {

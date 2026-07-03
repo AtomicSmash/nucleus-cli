@@ -11,7 +11,7 @@ class WordPressUserAddCommand extends Command
 {
     use WordPressUserTrait;
 
-    protected static $defaultName = 'wp:user-add';
+    protected static $defaultName = 'user:add';
 
     protected function configure(): void
     {
