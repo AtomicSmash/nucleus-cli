@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Command\WordPressUser;
+namespace Nucleus\Command;
 
 use Nucleus\Service\EnvFileLoader;
 use Nucleus\Service\WordPressProjectDetector;
