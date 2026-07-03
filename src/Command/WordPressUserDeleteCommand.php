@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Command\WordPressUser;
+namespace Nucleus\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +11,7 @@ class WordPressUserDeleteCommand extends Command
 {
     use WordPressUserTrait;
 
-    protected static $defaultName = 'wordpress:user delete';
+    protected static $defaultName = 'user:delete';
 
     protected function configure(): void
     {

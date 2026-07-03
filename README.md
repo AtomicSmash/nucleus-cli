@@ -74,9 +74,9 @@ The command will:
 Manage WordPress users across development, staging, and production environments:
 
 ```bash
-nucleus wordpress:user add
-nucleus wordpress:user list
-nucleus wordpress:user delete
+nucleus user:add
+nucleus user:list
+nucleus user:delete
 ```
 
 **Requirements:**
@@ -99,7 +99,7 @@ nucleus wordpress:user delete
 | `PRODUCTION_SSH_PORT` | Production SSH port |
 | `PRODUCTION_WEB_ROOT` | Absolute path to WordPress on production |
 
-**Optional `.env` defaults for `wordpress:user add`:**
+**Optional `.env` defaults for `user:add`:**
 
 | Variable | Description |
 |----------|-------------|

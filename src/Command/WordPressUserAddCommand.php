@@ -1,6 +1,6 @@
 <?php
 
-namespace Nucleus\Command\WordPressUser;
+namespace Nucleus\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +11,7 @@ class WordPressUserAddCommand extends Command
 {
     use WordPressUserTrait;
 
-    protected static $defaultName = 'wordpress:user add';
+    protected static $defaultName = 'user:add';
 
     protected function configure(): void
     {
