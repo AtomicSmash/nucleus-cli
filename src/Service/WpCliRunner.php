@@ -51,17 +51,27 @@ class WpCliRunner
         $prefix = $environment === self::ENV_STAGING ? 'STAGING' : 'PRODUCTION';
         $env = $envLoader->load();
 
-        $required = [
-            "{$prefix}_SSH_HOST" => 'SSH host',
-            "{$prefix}_SSH_USER" => 'SSH user',
-            "{$prefix}_SSH_PORT" => 'SSH port',
-            "{$prefix}_WEB_ROOT" => 'web root',
+        $values = [
+            'SSH host' => $env["{$prefix}_SSH_HOST"] ?? null,
+            'SSH user' => self::resolveEnvValue($env, [
+                "{$prefix}_SSH_USER",
+                "{$prefix}_SSH_USERNAME",
+            ]),
+            'SSH port' => $env["{$prefix}_SSH_PORT"] ?? null,
+            'web root' => $env["{$prefix}_WEB_ROOT"] ?? null,
+        ];
+
+        $missingKeys = [
+            'SSH host' => "{$prefix}_SSH_HOST",
+            'SSH user' => "{$prefix}_SSH_USER or {$prefix}_SSH_USERNAME",
+            'SSH port' => "{$prefix}_SSH_PORT",
+            'web root' => "{$prefix}_WEB_ROOT",
         ];
 
         $missing = [];
-        foreach ($required as $key => $label) {
-            if (empty($env[$key])) {
-                $missing[] = "{$key} ({$label})";
+        foreach ($values as $label => $value) {
+            if ($value === null || $value === '') {
+                $missing[] = "{$missingKeys[$label]} ({$label})";
             }
         }
 
@@ -73,10 +83,10 @@ class WpCliRunner
 
         return self::forRemote(
             $environment,
-            $env["{$prefix}_SSH_HOST"],
-            $env["{$prefix}_SSH_USER"],
-            $env["{$prefix}_SSH_PORT"],
-            $env["{$prefix}_WEB_ROOT"]
+            $values['SSH host'],
+            $values['SSH user'],
+            $values['SSH port'],
+            $values['web root']
         );
     }
 
@@ -127,8 +137,7 @@ class WpCliRunner
 
     private function buildCommand(array $args): string
     {
-        $wpArgs = array_merge(['user'], $args);
-        $escapedArgs = array_map('escapeshellarg', $wpArgs);
+        $escapedArgs = array_map('escapeshellarg', $args);
         $wpCommand = 'wp ' . implode(' ', $escapedArgs);
 
         if ($this->environment === self::ENV_DEVELOPMENT) {
@@ -148,5 +157,20 @@ class WpCliRunner
             escapeshellarg($this->sshHost),
             escapeshellarg($remoteCommand)
         );
+    }
+
+    /**
+     * @param array<string, string> $env
+     * @param string[] $keys
+     */
+    private static function resolveEnvValue(array $env, array $keys): ?string
+    {
+        foreach ($keys as $key) {
+            if (!empty($env[$key])) {
+                return $env[$key];
+            }
+        }
+
+        return null;
     }
 }

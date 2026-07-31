@@ -36,7 +36,7 @@ class WordPressUserDeleteCommand extends Command
         $io->text("Fetching users from {$context['environment']}...");
 
         try {
-            $json = $runner->runSuccessful(['list', '--format=json']);
+            $json = $runner->runSuccessful(['user', 'list', '--format=json']);
         } catch (\RuntimeException $e) {
             $io->error($e->getMessage());
             return $this->failure();
@@ -78,7 +78,7 @@ class WordPressUserDeleteCommand extends Command
         }
 
         try {
-            $runner->runSuccessful(['delete', $userId, '--yes'], $output);
+            $runner->runSuccessful(['user', 'delete', $userId, '--yes'], $output);
         } catch (\RuntimeException $e) {
             $io->error($e->getMessage());
             return $this->failure();

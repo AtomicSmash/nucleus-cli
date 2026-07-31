@@ -12,6 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use MailerSend\Helpers\Builder\Personalization;
+use Nucleus\Service\GlobalConfig;
 
 class PluginsUpdateCommand extends Command
 {
@@ -228,62 +229,68 @@ class PluginsUpdateCommand extends Command
         file_put_contents($gitignore, (file_exists($gitignore) ? file_get_contents($gitignore) : '') . $line);
     }
 
-    private function getGlobalConfigPath(): string
-    {
-        $home = getenv('HOME') ?: getenv('USERPROFILE') ?: '';
-        if ($home && is_dir($home . '/.config')) {
-            return $home . '/.config/nucleus/config.yml';
-        }
-        return $home . '/.nucleus/config.yml';
-    }
-
     private function ensureGlobalConfig(SymfonyStyle $io): bool
     {
-        $path = $this->getGlobalConfigPath();
-        $dir = dirname($path);
-        if (!file_exists($path)) {
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
+        $configService = new GlobalConfig();
+        $path = $configService->getPath();
+        if (!$configService->exists()) {
+            $io->warning('Global config not found at ' . $path);
+            if (!$io->confirm('Run config setup now?', true)) {
+                return false;
             }
-            $apiKey = $io->ask('MailerSend API key (from MailerSend dashboard)');
-            $senderEmail = $io->ask('Your @atomicsmash.co.uk sender email', '');
-            $developerName = $io->ask('Your name (for email signature)', '');
-            $config = [
-                'mailersend' => [
-                    'api_key' => $apiKey,
-                    'template_id' => 'v69oxl5d0ez4785k',
-                ],
-                'sender_email' => $senderEmail,
-                'developer_name' => $developerName,
-            ];
-            file_put_contents($path, Yaml::dump($config, 2));
-            $this->globalConfig = $config;
-            return true;
+            $setup = new ConfigSetupCommand();
+            $setup->run(
+                new \Symfony\Component\Console\Input\ArrayInput([]),
+                $io
+            );
+            $this->globalConfig = $configService->load();
+        } else {
+            $this->globalConfig = $configService->load();
         }
-        $this->globalConfig = Yaml::parseFile($path) ?: [];
+
+        $defaults = $this->globalConfig['developer_defaults'] ?? [];
         $apiKey = $this->globalConfig['mailersend']['api_key'] ?? '';
         $templateId = $this->globalConfig['mailersend']['template_id'] ?? '';
-        $sender = $this->globalConfig['sender_email'] ?? '';
-        $name = $this->globalConfig['developer_name'] ?? '';
-        if (empty($apiKey) || empty($templateId) || empty($sender) || empty($name)) {
-            $io->warning('Global config is missing MailerSend API key, template_id, sender_email, or developer_name.');
-            if ($io->confirm('Edit global config path: ' . $path . ' now?', true)) {
-                if (empty($apiKey)) {
-                    $this->globalConfig['mailersend']['api_key'] = $io->ask('MailerSend API key');
-                }
-                if (empty($templateId)) {
-                    $this->globalConfig['mailersend']['template_id'] = $io->ask('MailerSend template ID', 'v69oxl5d0ez4785k');
-                }
-                if (empty($sender)) {
-                    $this->globalConfig['sender_email'] = $io->ask('Sender @atomicsmash.co.uk email');
-                }
-                if (empty($name)) {
-                    $this->globalConfig['developer_name'] = $io->ask('Developer name');
-                }
-                file_put_contents($path, Yaml::dump($this->globalConfig, 2));
+        $email = is_array($defaults) ? ($defaults['email_address'] ?? '') : '';
+        $firstName = is_array($defaults) ? ($defaults['first_name'] ?? '') : '';
+        $lastName = is_array($defaults) ? ($defaults['last_name'] ?? '') : '';
+
+        if (empty($apiKey) || empty($templateId) || empty($email) || empty($firstName) || empty($lastName)) {
+            $io->warning('Global config is missing MailerSend settings or developer_defaults (email_address, first_name, last_name).');
+            if ($io->confirm('Run `nucleus config:setup` now?', true)) {
+                $setup = new ConfigSetupCommand();
+                $setup->run(
+                    new \Symfony\Component\Console\Input\ArrayInput([]),
+                    $io
+                );
+                $this->globalConfig = $configService->load();
             }
         }
+
         return true;
+    }
+
+    private function getDeveloperFullName(SymfonyStyle $io): string
+    {
+        $defaults = $this->globalConfig['developer_defaults'] ?? [];
+        $parts = [];
+        if (!empty($defaults['first_name'])) {
+            $parts[] = $defaults['first_name'];
+        }
+        if (!empty($defaults['last_name'])) {
+            $parts[] = $defaults['last_name'];
+        }
+
+        if (!empty($parts)) {
+            return implode(' ', $parts);
+        }
+
+        return $io->ask('Your name', '') ?? '';
+    }
+
+    private function getDeveloperEmail(): string
+    {
+        return $this->globalConfig['developer_defaults']['email_address'] ?? '';
     }
 
     private function loadWorkflow(): array
@@ -360,7 +367,7 @@ class PluginsUpdateCommand extends Command
         $clientEmail = $projectEmail['client_email'] ?? $io->ask('Client email', '');
         $cc = $projectEmail['cc'] ?? [];
         $siteType = $io->choice('Site type', ['WordPress', 'WooCommerce'], 'WordPress');
-        $developerName = $this->globalConfig['developer_name'] ?? $io->ask('Your name', '');
+        $developerName = $this->getDeveloperFullName($io);
         $additionalInfo = $io->ask('Additional information (optional)', '');
 
         $template = $this->loadEmailTemplate('maintenance-start');
@@ -693,7 +700,7 @@ class PluginsUpdateCommand extends Command
         $clientEmail = $projectEmail['client_email'] ?? $io->ask('Client email', '');
         $cc = $projectEmail['cc'] ?? [];
         $siteType = $io->choice('Site type', ['WordPress', 'WooCommerce'], 'WordPress');
-        $developerName = $this->globalConfig['developer_name'] ?? $io->ask('Your name', '');
+        $developerName = $this->getDeveloperFullName($io);
         $additionalInfo = $io->ask('Additional information (optional)', '');
 
         $plugins = $this->workflow['updated_plugins'] ?? $this->updatedPlugins;
@@ -767,11 +774,11 @@ class PluginsUpdateCommand extends Command
     {
         $apiKey = $this->globalConfig['mailersend']['api_key'] ?? '';
         $templateId = $this->globalConfig['mailersend']['template_id'] ?? '';
-        $from = $this->globalConfig['sender_email'] ?? '';
-        $fromName = $this->globalConfig['developer_name'] ?? '';
+        $from = $this->getDeveloperEmail();
+        $fromName = $this->getDeveloperFullName($io);
 
         if (empty($apiKey) || empty($templateId) || empty($from)) {
-            $io->error('Missing MailerSend API key, template_id, or sender email in global config.');
+            $io->error('Missing MailerSend API key, template_id, or developer_defaults.email_address in global config.');
             return false;
         }
 
