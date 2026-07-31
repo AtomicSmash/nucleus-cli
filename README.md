@@ -10,6 +10,35 @@ You can install the package globally via composer:
 composer global require atomicsmash/nucleus-cli
 ```
 
+Next you should setup the global Nucleus config (default values):
+
+```bash
+nucleus config:setup
+```
+
+The config is stored at `~/.config/nucleus/config.yml`.
+
+Here is an example with all the current available options:
+
+```yaml
+mailersend:
+  api_key: ...
+  template_id: v69oxl5d0ez4785k
+developer_defaults:
+  username: joe.bloggs
+  email_address: joe.bloggs@atomicsmash.co.uk
+  first_name: Joe
+  last_name: Bloggs
+  job_title: Support Developer
+  team: Support
+```
+
+If you want to view the contents of the config at any time just run:
+
+```bash
+nucleus config:show
+```
+
 ## Usage
 
 Nucleus provides several commands to help set up and manage WordPress projects:
@@ -91,20 +120,33 @@ nucleus user:delete
 | Variable | Description |
 |----------|-------------|
 | `STAGING_SSH_HOST` | Staging server hostname |
-| `STAGING_SSH_USER` | Staging SSH username |
+| `STAGING_SSH_USER` | Staging SSH username (also accepts `STAGING_SSH_USERNAME`) |
 | `STAGING_SSH_PORT` | Staging SSH port |
 | `STAGING_WEB_ROOT` | Absolute path to WordPress on staging |
 | `PRODUCTION_SSH_HOST` | Production server hostname |
-| `PRODUCTION_SSH_USER` | Production SSH username |
+| `PRODUCTION_SSH_USER` | Production SSH username (also accepts `PRODUCTION_SSH_USERNAME`) |
 | `PRODUCTION_SSH_PORT` | Production SSH port |
 | `PRODUCTION_WEB_ROOT` | Absolute path to WordPress on production |
 
-**Optional `.env` defaults for `user:add`:**
+**Optional defaults for `user:add`:**
+
+Global config (`developer_defaults` section via `nucleus config:setup`):
+
+| Key | Description |
+|-----|-------------|
+| `username` | Default username |
+| `email_address` | Default email address |
+| `first_name` | Default first name |
+| `last_name` | Default last name |
+| `job_title` | Stored as user meta `job_title` |
+| `team` | Stored as user meta `team` |
+
+Project `.env` fallbacks:
 
 | Variable | Description |
 |----------|-------------|
-| `WORDPRESS_USER` | Default username |
-| `WORDPRESS_USER_EMAIL` | Default email address |
+| `WORDPRESS_USER` | Default username (if global config has none) |
+| `WORDPRESS_USER_EMAIL` | Default email address (if global config has none) |
 | `WORDPRESS_PASSWORD` | Default password |
 
 ### Project Core Setup
@@ -179,7 +221,7 @@ Progress is stored in `.nucleus/plugin-workflow.yml` so you can resume if interr
 
 **Config:**
 - **Project** `.nucleus/config.yml`: `plugins_update.exclude` (plugin slugs to skip), `maintenance_email.client_name`, `maintenance_email.client_email`, `maintenance_email.cc`
-- **Global** `~/.config/nucleus/config.yml` (or `~/.nucleus/config.yml`): `mailersend.api_key`, `mailersend.template_id`, `sender_email`, `developer_name`
+- **Global** `~/.config/nucleus/config.yml`: `mailersend.api_key`, `mailersend.template_id`, and `developer_defaults` (`email_address`, `first_name`, `last_name`, etc.). Manage with `nucleus config:setup` / `nucleus config:show`.
 
 ### Theme Cleanup
 

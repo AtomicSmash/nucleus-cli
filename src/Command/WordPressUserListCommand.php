@@ -36,14 +36,44 @@ class WordPressUserListCommand extends Command
         $io->text("Listing users in {$context['environment']}...");
 
         try {
-            $runner->runSuccessful(
-                ['list', '--fields=ID,user_login,user_email,roles', '--format=table'],
-                $output
-            );
+            $json = $runner->runSuccessful([
+                'user',
+                'list',
+                '--fields=ID,user_login,user_email,roles',
+                '--format=json',
+            ]);
         } catch (\RuntimeException $e) {
             $io->error($e->getMessage());
             return $this->failure();
         }
+
+        $users = json_decode(trim($json), true);
+        if (!is_array($users)) {
+            $io->error('Could not parse user list from WP-CLI.');
+            return $this->failure();
+        }
+
+        if (empty($users)) {
+            $io->warning('No users found.');
+            return $this->success();
+        }
+
+        $io->table(
+            ['ID', 'Login', 'Email', 'Roles'],
+            array_map(static function (array $user): array {
+                $roles = $user['roles'] ?? '';
+                if (is_array($roles)) {
+                    $roles = implode(', ', $roles);
+                }
+
+                return [
+                    $user['ID'] ?? '',
+                    $user['user_login'] ?? '',
+                    $user['user_email'] ?? '',
+                    $roles,
+                ];
+            }, $users)
+        );
 
         return $this->success();
     }
