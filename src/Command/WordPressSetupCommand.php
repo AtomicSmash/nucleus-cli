@@ -13,6 +13,8 @@ use Nucleus\Config\Defaults;
 
 class WordPressSetupCommand extends Command
 {
+    use RequiresNotOnboardedTrait;
+
     protected static $defaultName = 'wordpress:setup';
     private string $projectRoot;
 
@@ -26,6 +28,11 @@ class WordPressSetupCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->failIfOnboarded($io)) {
+            return Command::FAILURE;
+        }
+
         $this->projectRoot = getcwd();
 
         $io->title('WordPress Setup');

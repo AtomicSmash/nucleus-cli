@@ -10,6 +10,8 @@ use Nucleus\Config\Defaults;
 
 class ProjectConfigCommand extends Command
 {
+    use RequiresNotOnboardedTrait;
+
     protected static $defaultName = 'project:config';
     private string $projectRoot;
     private static array $projectData = [];
@@ -24,6 +26,11 @@ class ProjectConfigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->failIfOnboarded($io)) {
+            return Command::FAILURE;
+        }
+
         $this->projectRoot = getcwd();
 
         $io->title('Project Configuration');

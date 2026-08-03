@@ -64,9 +64,31 @@ This command will:
 
 You can also run each command independently if you prefer to set up your project step by step.
 
+### Project config file (`.nucleus/config.yml`)
+
+Per-project settings live in `.nucleus/config.yml` in the project root. Example:
+
+```yaml
+onboarded: false
+wordpress_user_management: true
+plugins_update:
+  exclude: []
+maintenance_email:
+  client_name: Acme Ltd
+  client_email: client@example.com
+  cc: []
+```
+
+| Key | Default (if missing) | Description |
+|-----|----------------------|-------------|
+| `onboarded` | `false` | When `true`, blocks onboarding commands: `project:setup`, `project:config`, `project:core`, `wordpress:setup`, `plugins:migrate`, `theme:cleanup`. Set automatically after a successful `project:setup`, or edit the YAML manually. |
+| `wordpress_user_management` | `true` | When `false`, disables `user:add`, `user:list`, and `user:delete` for this project. |
+| `plugins_update` | — | Used by `plugins:update` (e.g. `exclude` plugin slugs). |
+| `maintenance_email` | — | Used by `plugins:update` for client email details. |
+
 ### Project Configuration
 
-Configure project settings that are shared across all commands:
+Configure in-memory project settings that are shared across onboarding commands:
 
 ```bash
 nucleus project:config
@@ -112,6 +134,7 @@ nucleus user:delete
 - A `wp-cli.yml` file in the project root (marks the project as a WordPress installation)
 - WP-CLI installed locally for development commands
 - A `.env` file with SSH credentials for staging and production
+- `wordpress_user_management` not set to `false` in `.nucleus/config.yml`
 
 **Environment selection:** Each command prompts you to choose an environment (defaults to **development**). For staging and production, WP-CLI commands are run remotely over SSH using credentials from your `.env` file.
 
@@ -220,7 +243,7 @@ The command will:
 Progress is stored in `.nucleus/plugin-workflow.yml` so you can resume if interrupted. Use `--no-resume` to start fresh.
 
 **Config:**
-- **Project** `.nucleus/config.yml`: `plugins_update.exclude` (plugin slugs to skip), `maintenance_email.client_name`, `maintenance_email.client_email`, `maintenance_email.cc`
+- **Project** `.nucleus/config.yml`: `onboarded`, `wordpress_user_management`, `plugins_update.exclude`, `maintenance_email.client_name`, `maintenance_email.client_email`, `maintenance_email.cc`
 - **Global** `~/.config/nucleus/config.yml`: `mailersend.api_key`, `mailersend.template_id`, and `developer_defaults` (`email_address`, `first_name`, `last_name`, etc.). Manage with `nucleus config:setup` / `nucleus config:show`.
 
 ### Theme Cleanup

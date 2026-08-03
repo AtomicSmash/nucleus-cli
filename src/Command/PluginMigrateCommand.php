@@ -12,6 +12,8 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class PluginMigrateCommand extends Command
 {
+    use RequiresNotOnboardedTrait;
+
     protected static $defaultName = 'plugins:migrate';
     private Client $client;
     private array $notFoundPlugins = [];
@@ -35,6 +37,10 @@ class PluginMigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->failIfOnboarded($io)) {
+            return Command::FAILURE;
+        }
         
         // Check for composer.json
         if (!$this->checkComposerJson($io)) {

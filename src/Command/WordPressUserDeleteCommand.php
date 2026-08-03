@@ -55,14 +55,14 @@ class WordPressUserDeleteCommand extends Command
 
         $choices = [];
         foreach ($users as $user) {
-            $id = $user['ID'] ?? '';
+            $id = (string) ($user['ID'] ?? '');
             $login = $user['user_login'] ?? '';
             $email = $user['user_email'] ?? '';
-            $choices["{$id}: {$login} ({$email})"] = (string) $id;
+            $choices[$id] = "{$login} ({$email})";
         }
 
-        $selectedLabel = $io->choice('Select a user to delete', array_keys($choices));
-        $userId = $choices[$selectedLabel];
+        $userId = (string) $io->choice('Select a user ID to delete the user:', $choices);
+        $selectedLabel = "{$userId}: {$choices[$userId]}";
 
         if ($userId === '1') {
             $io->warning('You are about to delete the primary administrator account (ID 1).');
