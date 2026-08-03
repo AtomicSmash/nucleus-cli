@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use MailerSend\Helpers\Builder\Personalization;
 use Nucleus\Service\GlobalConfig;
+use Nucleus\Service\ProjectConfig;
 
 class PluginsUpdateCommand extends Command
 {
@@ -200,13 +201,13 @@ class PluginsUpdateCommand extends Command
             return false;
         }
 
-        $configPath = $this->projectRoot . '/.nucleus/config.yml';
-        if (!file_exists($configPath)) {
+        $projectConfig = new ProjectConfig($this->projectRoot);
+        if (!$projectConfig->exists()) {
             $io->error('.nucleus/config.yml not found. Please create it with plugins_update and (if using emails) maintenance_email settings.');
             return false;
         }
 
-        $this->projectConfig = Yaml::parseFile($configPath) ?: [];
+        $this->projectConfig = $projectConfig->load();
         $this->ensureNucleusGitignore();
 
         return true;

@@ -2,6 +2,7 @@
 
 namespace Nucleus\Command;
 
+use Nucleus\Service\ProjectConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,6 +11,8 @@ use Symfony\Component\Process\Process;
 
 class ProjectSetupCommand extends Command
 {
+    use RequiresNotOnboardedTrait;
+
     protected static $defaultName = 'project:setup';
 
     protected function configure(): void
@@ -22,6 +25,10 @@ class ProjectSetupCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->failIfOnboarded($io)) {
+            return Command::FAILURE;
+        }
 
         $io->title('Nucleus Project Setup');
         $io->text('This will run all the necessary setup commands for your WordPress project.');
@@ -59,16 +66,16 @@ class ProjectSetupCommand extends Command
         foreach ($commands as $command => $info) {
             $io->section($info['name']);
             $io->text($info['description']);
-            
+
             if (!$io->confirm("Do you want to run {$info['name']}?", true)) {
                 $io->text("Skipping {$info['name']}.");
                 continue;
             }
-            
+
             if (!$this->runCommand($command, $io)) {
                 $io->error("Failed to run: {$command}");
                 $success = false;
-                
+
                 if (!$io->confirm('Do you want to continue with the remaining commands?', false)) {
                     break;
                 }
@@ -79,8 +86,11 @@ class ProjectSetupCommand extends Command
         }
 
         if ($success) {
+            (new ProjectConfig())->setOnboarded(true);
+
             $io->success('Project setup completed successfully!');
-            
+            $io->text('This project has been marked as onboarded in `.nucleus/config.yml`.');
+
             if (!empty($completedCommands)) {
                 $io->text([
                     'Your WordPress project is now configured with:',
@@ -124,4 +134,4 @@ class ProjectSetupCommand extends Command
             return false;
         }
     }
-} 
+}

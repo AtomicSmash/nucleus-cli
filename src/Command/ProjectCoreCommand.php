@@ -10,6 +10,8 @@ use Nucleus\Config\Defaults;
 
 class ProjectCoreCommand extends Command
 {
+    use RequiresNotOnboardedTrait;
+
     protected static $defaultName = 'project:core';
     private string $projectRoot;
     private array $placeholders = [];
@@ -24,6 +26,11 @@ class ProjectCoreCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->failIfOnboarded($io)) {
+            return Command::FAILURE;
+        }
+
         $this->projectRoot = getcwd();
 
         $io->title('Project Core Setup');

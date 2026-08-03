@@ -3,6 +3,7 @@
 namespace Nucleus\Command;
 
 use Nucleus\Service\EnvFileLoader;
+use Nucleus\Service\ProjectConfig;
 use Nucleus\Service\WordPressProjectDetector;
 use Nucleus\Service\WpCliRunner;
 use Symfony\Component\Console\Command\Command;
@@ -13,6 +14,15 @@ trait WordPressUserTrait
     private function initializeWordPressUserContext(SymfonyStyle $io): ?array
     {
         $projectRoot = getcwd();
+        $projectConfig = new ProjectConfig($projectRoot);
+
+        if (!$projectConfig->isWordPressUserManagementEnabled()) {
+            $io->error(
+                'WordPress user management is disabled for this project. Set `wordpress_user_management: true` in `.nucleus/config.yml` to enable it.'
+            );
+            return null;
+        }
+
         $detector = new WordPressProjectDetector($projectRoot);
 
         if (!$detector->hasWpCliConfig()) {
