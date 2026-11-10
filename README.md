@@ -82,7 +82,7 @@ maintenance_email:
 | Key | Default (if missing) | Description |
 |-----|----------------------|-------------|
 | `onboarded` | `false` | When `true`, blocks onboarding commands: `project:setup`, `project:config`, `project:core`, `wordpress:setup`, `plugins:migrate`, `theme:cleanup`. Set automatically after a successful `project:setup`, or edit the YAML manually. |
-| `wordpress_user_management` | `true` | When `false`, disables `user:add`, `user:list`, and `user:delete` for this project. |
+| `wordpress_user_management` | `true` | When `false`, disables `user:add` and `user:list` for this project. |
 | `plugins_update` | — | Used by `plugins:update` (e.g. `exclude` plugin slugs). |
 | `maintenance_email` | — | Used by `plugins:update` for client email details. |
 
@@ -127,7 +127,6 @@ Manage WordPress users across development, staging, and production environments:
 ```bash
 nucleus user:add
 nucleus user:list
-nucleus user:delete
 ```
 
 **Requirements:**
