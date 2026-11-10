@@ -24,7 +24,7 @@ use Nucleus\Command\WordPressUserAddCommand;
 use Nucleus\Command\WordPressUserListCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Nucleus', '1.0.0-beta.5');
+$application = new Application('Nucleus', '1.0.0-beta.6');
 $application->add(new PluginMigrateCommand());
 $application->add(new PluginsPackageCommand());
 $application->add(new PluginsUpdateCommand());

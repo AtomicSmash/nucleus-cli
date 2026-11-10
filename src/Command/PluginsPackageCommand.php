@@ -59,24 +59,30 @@ class PluginsPackageCommand extends Command
             return Command::SUCCESS;
         }
 
-        $choices = ['0' => 'All plugins'];
-        foreach (array_values($plugins) as $index => $plugin) {
-            $choices[(string) ($index + 1)] = sprintf(
-                '%s (%s)',
-                $plugin['slug'],
-                $plugin['version']
-            );
+        // Use a sequential list so Symfony shows [0], [1], ... and returns the label.
+        // Numeric string keys like '0' are cast to ints by PHP and break key-based matching.
+        $plugins = array_values($plugins);
+        $choices = ['All plugins'];
+        foreach ($plugins as $plugin) {
+            $choices[] = sprintf('%s (%s)', $plugin['slug'], $plugin['version']);
         }
 
         $selected = (string) $io->choice(
             'Select which plugins to zip ([0] for all)',
             $choices,
-            '0'
+            'All plugins'
         );
 
-        $toPackage = $selected === '0'
-            ? array_values($plugins)
-            : [$plugins[(int) $selected - 1]];
+        if ($selected === 'All plugins') {
+            $toPackage = $plugins;
+        } else {
+            $index = array_search($selected, $choices, true);
+            if ($index === false || $index < 1 || !isset($plugins[$index - 1])) {
+                $io->error('Invalid plugin selection.');
+                return Command::FAILURE;
+            }
+            $toPackage = [$plugins[$index - 1]];
+        }
 
         $outputDir = $this->projectRoot . '/.nucleus/packaged-plugins';
         if (!$this->ensureOutputDirectory($outputDir, $io)) {
