@@ -216,6 +216,22 @@ The command will:
    - If not, add it to a list of not found plugins
 5. Display any plugins that weren't found in the WordPress directory
 
+### Plugin Packaging
+
+Package WordPress plugins into clean zip files for private repositories (e.g. Arkisto), without macOS hidden files:
+
+```bash
+nucleus plugins:package
+```
+
+The command will:
+1. Locate `wp-content/plugins` (checks `wp-content` and `public/wp-content`, or prompts for a path)
+2. List plugins and prompt you to choose `[0] All plugins` or a single plugin by number
+3. Read each plugin’s version from its main plugin file
+4. Create zips named `plugin-slug.VERSION.zip` under `.nucleus/packaged-plugins/`
+5. Place the plugin folder at the top level of each zip (e.g. `plugin-slug/plugin-slug.php`)
+6. Exclude macOS junk such as `.DS_Store`, `._*` files, and `__MACOSX`
+
 ### Plugins Update
 
 Run the monthly plugin update workflow with optional maintenance emails and deploy steps:
