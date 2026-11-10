@@ -20,7 +20,6 @@ use Nucleus\Command\ThemeCleanupCommand;
 use Nucleus\Command\ConfigSetupCommand;
 use Nucleus\Command\ConfigShowCommand;
 use Nucleus\Command\WordPressUserAddCommand;
-use Nucleus\Command\WordPressUserDeleteCommand;
 use Nucleus\Command\WordPressUserListCommand;
 use Symfony\Component\Console\Application;
 
@@ -36,5 +35,4 @@ $application->add(new ConfigSetupCommand());
 $application->add(new ConfigShowCommand());
 $application->add(new WordPressUserAddCommand());
 $application->add(new WordPressUserListCommand());
-$application->add(new WordPressUserDeleteCommand());
 $application->run(); 
